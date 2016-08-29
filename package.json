@@ -6,6 +6,7 @@
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
+    "angular": "^1.5.8",
     "body-parser": "~1.15.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
@@ -17,6 +18,9 @@
     "serve-favicon": "~2.3.0"
   },
   "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-sass": "^2.3.2",
+    "gulp-typescript": "^2.13.6",
     "nodemon": "^1.10.2",
     "reload": "^1.0.1"
   }
