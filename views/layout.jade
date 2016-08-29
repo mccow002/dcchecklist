@@ -1,0 +1,31 @@
+doctype html
+html(ng-app='checklist')
+  head
+    title DC Checklist
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.css')
+    link(rel='stylesheet', href='/bower_components/components-font-awesome/css/font-awesome.css')
+    link(rel='stylesheet', href='/bower_components/angular-bootstrap/ui-bootstrap-csp.css')
+
+    script(src='/bower_components/jquery/dist/jquery.js')
+    script(src='/bower_components/bootstrap/dist/js/bootstrap.js')
+    script(src='/bower_components/angular/angular.js')
+    script(src='/bower_components/angular-bootstrap/ui-bootstrap.js')
+    script(src='/bower_components/angular-bootstrap/ui-bootstrap-tpls.js')
+
+    script(src='/javascripts/checklist-app.js')
+  body
+    div(class='container-fluid')
+      div(class='header clearfix')
+        nav
+          ul(class='nav nav-pills pull-right')
+            li
+              a(href='#') Publications
+            li
+              a(href='#') Series
+            li
+              a(href='#') Collection
+
+        h3(class='text-muted') DC Checklist
+
+      block content
