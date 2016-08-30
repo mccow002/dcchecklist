@@ -11,7 +11,7 @@ export class PubService {
         var req = this.$http.get('/api/getall/' + index);
 
         req.success((data: any) => {
-            q.resolve(data.comics);
+            q.resolve(data.pubs);
         });
 
         req.error(() => {

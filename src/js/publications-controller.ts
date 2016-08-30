@@ -6,10 +6,12 @@ export class PublicationsController {
     static $inject = ['publisherService'];
 
     comics: any[];
-    indexes: String[]
+    indexes = new Array<String>();
     index = 0;
 
     constructor(private pubService: PubService) {
+        let $scope: ng.IScope;
+
         this.indexes.push("0-9");
         for(let i = 65;i<91;++i) {
             this.indexes.push(String.fromCharCode(i));

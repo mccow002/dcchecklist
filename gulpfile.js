@@ -20,7 +20,7 @@ gulp.task('sass', function(){
 gulp.task('typescript', function(){
     return tsProject.src()
         .pipe(ts(tsProject))
-        .js.pipe(gulp.dest('./dist/js'));
+        .js.pipe(gulp.dest('./dist'));
 });
 
 var bundle = function () {
@@ -35,7 +35,7 @@ var bundle = function () {
     .plugin(tsify)
     .bundle()
     .pipe(source('bundle.js'))
-    .pipe(gulp.dest("dist/js/js"));
+    .pipe(gulp.dest("dist/js"));
 
   // transform regular node stream to gulp (buffered vinyl) stream
 //   var browserified = transform(function(filename) {
