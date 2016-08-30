@@ -1,9 +1,14 @@
-import {module} from 'angular';
-require('angular-bootstrap-npm')
+import { module } from 'angular';
+import { PublicationsController } from './publications-controller'
+import { PubService } from './publications-service'
+require('angular-bootstrap-npm');
 
 export let app = module('checklist', [
-    ''
+    'ui.bootstrap'
 ]);
+
+app.controller('checklistCtrl', PublicationsController);
+app.service('publisherService', PubService);
 
 // app.controller('checklistCtrl', 
 //     function ($scope, $uibModal, checklistData){

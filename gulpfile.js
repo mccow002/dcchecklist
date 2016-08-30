@@ -20,23 +20,36 @@ gulp.task('sass', function(){
 gulp.task('typescript', function(){
     return tsProject.src()
         .pipe(ts(tsProject))
-        .js.pipe(gulp.dest('./src/dist/js'));
+        .js.pipe(gulp.dest('./dist/js'));
 });
 
-gulp.task('bundle-js', function () {
+var bundle = function () {
+
+    return browserify({
+        basedir: '.',
+        debug: true,
+        entries: ['src/js/checklist-app.ts'],
+        cache: {},
+        packageCache: {}
+    })
+    .plugin(tsify)
+    .bundle()
+    .pipe(source('bundle.js'))
+    .pipe(gulp.dest("dist/js/js"));
+
   // transform regular node stream to gulp (buffered vinyl) stream
-  var browserified = transform(function(filename) {
-      var b = browserify({ entries: filename, debug: true });
-      return b.bundle();
-  });
+//   var browserified = transform(function(filename) {
+//       var b = browserify({ entries: filename, debug: true });
+//       return b.bundle();
+//   });
 
-  return gulp.src('./src/dist/js/main.js')
-             .pipe(browserified)
-             .pipe(sourcemaps.init({ loadMaps: true }))
-             .pipe(uglify())
-             .pipe(sourcemaps.write('./'))
-             .pipe(gulp.dest('./dist/js/'));
-});
+//   return gulp.src('./dist/js/js/checklist-app.js')
+//              .pipe(browserified)
+//              .pipe(sourcemaps.init({ loadMaps: true }))
+//              .pipe(uglify())
+//              .pipe(sourcemaps.write('./'))
+//              .pipe(gulp.dest('./dist/js/js/main.js'));
+};
 
 //Watch task
 gulp.task('watch',function() {
@@ -44,4 +57,6 @@ gulp.task('watch',function() {
     gulp.watch('*.ts', ['typescript'])
 });
 
-gulp.task('build', ['sass', 'typescript', 'bundle-js']);
+gulp.task('build', ['sass', 'typescript'], function(){
+    bundle();
+});

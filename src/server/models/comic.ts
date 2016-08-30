@@ -1,7 +1,16 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+import * as mongoose from 'mongoose';
 
-var comicSchema = new Schema({
+export interface IPublication extends mongoose.Document {
+    FirstChar: String,
+    Title: String,
+    Series: String,
+    Issues: String,
+    Dates: String,
+    Notes: String,
+    Owned: Boolean
+}
+
+export const PublicationSchema = new mongoose.Schema({
     FirstChar: String,
     Title: String,
     Series: String,
@@ -10,8 +19,6 @@ var comicSchema = new Schema({
     Notes: String,
     Owned: Boolean
 });
-comicSchema.index({'$**': 'text'});
+PublicationSchema.index({'$**': 'text'});
 
-var Comic = mongoose.model('series', comicSchema);
-
-module.exports = Comic;
+export const Publication = mongoose.model<IPublication>('publications', PublicationSchema);

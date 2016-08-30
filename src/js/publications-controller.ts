@@ -1,7 +1,7 @@
 import {app} from './checklist-app';
 import {PubService} from './publications-service'
 
-export default class PublicationsController {
+export class PublicationsController {
 
     static $inject = ['publisherService'];
 
@@ -25,6 +25,4 @@ export default class PublicationsController {
                 this.comics = data;
             });
     };
-}
-
-app.controller('checklistCtrl', PublicationsController);
+};

@@ -21,5 +21,3 @@ export class PubService {
         return q.promise;
     } 
 }
-
-app.service('publisherService', PubService);
