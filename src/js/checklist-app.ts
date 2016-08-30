@@ -1,7 +1,8 @@
 import {module} from 'angular';
+require('angular-bootstrap-npm')
 
 export let app = module('checklist', [
-    require('ui.bootstrap')
+    ''
 ]);
 
 // app.controller('checklistCtrl', 

@@ -8,15 +8,10 @@
         "--no-color"
     ],
     "tasks": [
-        // {
-		// 	"taskName": "sass",
-		// 	"isBuildCommand": true,
-		// 	"showOutput": "always"
-		// },
         {
-			"taskName": "tsc",
-			"isBuildCommand": true,
-			"showOutput": "always"
-		}
+            "taskName": "build",
+            "isBuildCommand": true,
+            "showOutput": "always"
+        }
     ]
 }

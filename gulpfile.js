@@ -1,22 +1,47 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var ts = require('gulp-typescript');
+var browserify = require('browserify');
+var tsify = require('tsify');
+var source = require('vinyl-source-stream');
+var transform = require('vinyl-transform');
+var uglify = require('gulp-uglify');
+var sourcemaps = require('gulp-sourcemaps')
+
 
 var tsProject = ts.createProject('tsconfig.json');
 
 gulp.task('sass', function(){
-    gulp.src('src/css/*.scss')
+    return gulp.src('src/css/*.scss')
         .pipe(sass().on('error', sass.logError))
         .pipe(gulp.dest('./dist/css'));
 });
 
-gulp.task('tsc', function(){
+gulp.task('typescript', function(){
     return tsProject.src()
         .pipe(ts(tsProject))
-        .js.pipe(gulp.dest('./dist/js'));
+        .js.pipe(gulp.dest('./src/dist/js'));
+});
+
+gulp.task('bundle-js', function () {
+  // transform regular node stream to gulp (buffered vinyl) stream
+  var browserified = transform(function(filename) {
+      var b = browserify({ entries: filename, debug: true });
+      return b.bundle();
+  });
+
+  return gulp.src('./src/dist/js/main.js')
+             .pipe(browserified)
+             .pipe(sourcemaps.init({ loadMaps: true }))
+             .pipe(uglify())
+             .pipe(sourcemaps.write('./'))
+             .pipe(gulp.dest('./dist/js/'));
 });
 
 //Watch task
-gulp.task('default',function() {
-    gulp.watch('sass/**/*.scss',['styles']);
+gulp.task('watch',function() {
+    gulp.watch('src/css/*.scss',['sass']);
+    gulp.watch('*.ts', ['typescript'])
 });
+
+gulp.task('build', ['sass', 'typescript', 'bundle-js']);
