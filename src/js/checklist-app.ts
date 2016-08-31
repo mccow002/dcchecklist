@@ -1,6 +1,7 @@
 import { module } from 'angular';
-import { PubService } from './publications-service';
-import { PublicationsController } from './publications-controller';
+import { PubService } from './publications/publications-service';
+import { PublicationsController } from './publications/publications-controller';
+import { ParseSeriesController } from './publications/parse-series-controller';
 require('angular-bootstrap-npm');
 
 export let app = module('checklist', [
@@ -8,7 +9,8 @@ export let app = module('checklist', [
 ]);
 
 app.service('pubService', PubService);
-app.controller('checklistCtrl', ['pubService', PublicationsController]);
+app.controller('checklistCtrl', PublicationsController);
+app.controller('parseSeriesCtrl', ParseSeriesController);
 
 // app.controller('checklistCtrl', 
 //     function ($scope, $uibModal, checklistData){

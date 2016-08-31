@@ -40,13 +40,13 @@ block content
 										i(class='fa fa-ban')
 						td 
 							span {{r.Title}}
-							div(class='btn-toolbar pull-right')
-								div(class='btn-group')
-									a(class='btn btn-default btn-xs pull-right', ng-href='{{ck.BuildCvSearchUrl(r)}}', target='_blank') CV
-									a(class='btn btn-default btn-xs pull-right', ng-href='{{ck.BuildDcSearchUrl(r)}}', target='_blank') DC
+							.btn-toolbar.pull-right
+								.btn-group
+									a.btn.btn-default.btn-xs.pull-right(ng-href='{{ck.BuildCvSearchUrl(r)}}', target='_blank') CV
+									a.btn.btn-default.btn-xs.pull-right(ng-href='{{ck.BuildDcSearchUrl(r)}}', target='_blank') DC
 						td {{r.Series}}
 						td {{r.Issues}}
 						td {{r.Dates}}
 						td {{r.Notes}}
 						td
-							button(class='btn btn-default btn-xs', ng-click='ck.parseSeries(r)') Parse Series
+							button.btn.btn-default.btn-xs(ng-click='ck.ParseSeries(r)') Parse Series

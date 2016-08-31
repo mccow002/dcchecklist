@@ -1,4 +1,4 @@
-import {app} from './checklist-app';
+import {app} from '../checklist-app';
 
 export class PubService {
 

@@ -1,18 +1,16 @@
-import {app} from './checklist-app';
+import {app} from '../checklist-app';
 import {PubService} from './publications-service';
-import {IPublicationsScope} from './publications-scope'
 
 export class PublicationsController {
 
-    static $inject = ['pubService'];
+    static $inject = ['pubService', '$uibModal'];
 
     Publications: Array<any>;
     Indexes: Array<string>;
     Index: number;
 
-    constructor(private pubService: PubService) {
-        //this.scope = $scope;
-
+    constructor(private pubService: PubService, private modal: ng.ui.bootstrap.IModalService) {
+        
         this.Indexes = new Array<string>();
         this.Index = 0;
 
@@ -61,4 +59,14 @@ export class PublicationsController {
         var index = this.Publications.indexOf(pub);
         this.Publications.splice(index, 1);
     }
+
+    ParseSeries(pub: any) {
+        let mi = this.modal.open({
+            controller: 'parseSeriesCtrl as ps',
+            templateUrl: '/templates/publications/parseSeries.html',
+            resolve: {
+                pub: () => pub
+            }
+        });
+    };
 };

@@ -24,8 +24,7 @@ app.use(cookieParser());
 app.use('/dist', express.static(path.join(__dirname, 'dist')));
 app.use('/fontawesome', express.static(path.join(__dirname, '/node_modules/font-awesome')));
 app.use('/bootstrap', express.static(path.join(__dirname, '/node_modules/bootstrap/dist/css')));
-
-console.log(path.join(__dirname, '/node_modules/bootstgrap/dist/css'));
+app.use('/templates', express.static(path.join(__dirname, '/templates')));
 
 app.use('/', routes);
 //app.use('/users', users);
