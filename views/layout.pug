@@ -3,16 +3,16 @@ html(ng-app='checklist')
   head
     title DC Checklist
     link(rel='stylesheet', href='/dist/css/style.css')
-    link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.css')
-    link(rel='stylesheet', href='/bower_components/components-font-awesome/css/font-awesome.css')
+    link(rel='stylesheet', href='/bootstrap/bootstrap.css')
+    link(rel='stylesheet', href='/fontawesome/css/font-awesome.css')
     //- link(rel='stylesheet', href='/bower_components/angular-bootstrap/ui-bootstrap-csp.css')
 
     script(src='/dist/js/bundle.js')
   body
-    div(class='container-fluid')
-      div(class='header clearfix')
+    .container-fluid
+      .header.clearfix
         nav
-          ul(class='nav nav-pills pull-right')
+          .nav.nav-pills.pull-right
             li
               a(href='#') Publications
             li

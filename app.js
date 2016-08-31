@@ -22,7 +22,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use('/dist', express.static(path.join(__dirname, 'dist')));
-app.use('/bower_components', express.static(path.join(__dirname, '/bower_components')));
+app.use('/fontawesome', express.static(path.join(__dirname, '/node_modules/font-awesome')));
+app.use('/bootstrap', express.static(path.join(__dirname, '/node_modules/bootstrap/dist/css')));
+
+console.log(path.join(__dirname, '/node_modules/bootstgrap/dist/css'));
 
 app.use('/', routes);
 //app.use('/users', users);

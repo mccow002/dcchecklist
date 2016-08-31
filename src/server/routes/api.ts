@@ -39,32 +39,3 @@ let pubApi = new PublicationsApi();
 router.get('/getall/:index', pubApi.GetAll);
 router.put('/', pubApi.Update);
 router.delete('/:id', pubApi.Delete);
-
-// router.get('/search/:search', function(req, res){
-//     Comic.find({$text: {$search: req.params.search}})
-//         .exec(function(err, results){
-//             res.json({comics: results}); 
-//         })
-// });
-
-// router.put('/', function(req, res){
-//     console.log(req.body);
-
-//     var comic = req.body;
-//     Comic.findByIdAndUpdate(comic._id, comic, function(err, update){
-//         if(err) throw err;
-
-//         res.json(update);
-//     });
-// });
-
-// router.delete('/:id', function(req, res){
-//     console.log(req.params.id);
-
-//     Comic.findByIdAndRemove(req.params.id, function(err){
-//         if(err) throw err;
-//         res.json(200);
-//     })
-// })
-
-module.exports = router;
