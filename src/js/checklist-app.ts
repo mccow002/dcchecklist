@@ -1,14 +1,14 @@
 import { module } from 'angular';
-import { PublicationsController } from './publications-controller'
-import { PubService } from './publications-service'
+import { PubService } from './publications-service';
+import { PublicationsController } from './publications-controller';
 require('angular-bootstrap-npm');
 
 export let app = module('checklist', [
     'ui.bootstrap'
 ]);
 
-app.controller('checklistCtrl', PublicationsController);
-app.service('publisherService', PubService);
+app.service('pubService', PubService);
+app.controller('checklistCtrl', ['pubService', PublicationsController]);
 
 // app.controller('checklistCtrl', 
 //     function ($scope, $uibModal, checklistData){
@@ -153,65 +153,4 @@ app.service('publisherService', PubService);
 
 //         return items;
 //     }
-// });
-
-// app.factory('checklistData', function($q, $http){
-//     return {
-//         load: function(index){
-//             var q = $q.defer();
-//             var req = $http.get('/api/getall/' + index);
-
-//             req.success(function(data){
-//                 q.resolve(data.comics);
-//             });
-
-//             req.error(function(){
-//                 q.reject();
-//             });
-
-//             return q.promise;
-//         },
-//         search: function(search){
-//             var q = $q.defer();
-//             var req = $http.get('/api/search/' + search);
-
-//             req.success(function(data){
-//                 q.resolve(data.comics);
-//             });
-
-//             req.error(function(){
-//                 q.reject();
-//             });
-
-//             return q.promise;
-//         },
-//         put: function(comic){
-//             var q = $q.defer();
-//             var req = $http.put('/api/', comic);
-
-//             req.success(function(){
-//                 q.resolve();
-//             });
-
-//             req.error(function(){
-//                 q.reject();
-//             });
-
-//             return q.promise;
-//         },
-//         remove: function(comic){
-//             var q = $q.defer();
-//             var req = $http.delete('/api/' + comic._id);
-
-//             req.success(function(){
-//                 q.resolve();
-//             });
-
-//             req.error(function(){
-//                 q.reject();
-//             });
-
-//             return q.promise;
-//         }
-//     };
 // });

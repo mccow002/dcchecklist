@@ -17,11 +17,28 @@ class PublicationsApi {
             res.json({pubs: pubs});
         });
     }
+
+    public Update(req: express.Request, res: express.Response) {
+        let pub = req.body;
+        Publication.findByIdAndUpdate(pub._id, pub, (err: mongoose.Error, update: IPublication) => {
+            if(err) throw err;
+            res.json(update);
+        });
+    }
+
+    public Delete(req: express.Request, res: express.Response) {
+        Publication.findByIdAndRemove(req.params.id, (err) => {
+            if(err) throw err;
+            res.json(200);
+        });
+    }
 }
 
 let pubApi = new PublicationsApi();
 
 router.get('/getall/:index', pubApi.GetAll);
+router.put('/', pubApi.Update);
+router.delete('/:id', pubApi.Delete);
 
 // router.get('/search/:search', function(req, res){
 //     Comic.find({$text: {$search: req.params.search}})
