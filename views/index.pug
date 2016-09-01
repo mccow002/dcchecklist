@@ -10,8 +10,8 @@ block content
 							a(href='#', ng-click='ck.loadSlice($index)') {{i}}
 					form.navbar-form.navbar-left.pull-right
 						.form-group
-							input(type='text', class='form-control', placeholder='Search', ng-model='search.val')
-						button(class='btn btn-default', type='submit', ng-click='search()')
+							input(type='text', class='form-control', placeholder='Search', ng-model='ck.SearchParams.SearchText')
+						button(class='btn btn-default', type='submit', ng-click='ck.search()')
 							i.fa.fa-search
 
 		div.progress(ng-if='ck.Publications.length === 0')

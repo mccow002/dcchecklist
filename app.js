@@ -7,7 +7,9 @@ var bodyParser = require('body-parser');
 
 var routes = require('./dist/server/routes/index');
 //var users = require('./dist/server/routes/users');
-var api = require('./dist/server/routes/api');
+var api = require('./dist/server/routes/pubapi');
+var partials = require('./dist/server/routes/partials');
+var seriesapi = require('./dist/server/routes/seriesapi');
 
 var app = express();
 
@@ -29,6 +31,8 @@ app.use('/templates', express.static(path.join(__dirname, '/templates')));
 app.use('/', routes);
 //app.use('/users', users);
 app.use('/api', api);
+app.use('/partials', partials);
+app.use('/seriesapi', seriesapi);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,6 +1,7 @@
 import * as mongoose from 'mongoose';
 
 export interface IPublication extends mongoose.Document {
+    _type: String,
     FirstChar: String,
     Title: String,
     Series: String,
@@ -11,6 +12,7 @@ export interface IPublication extends mongoose.Document {
 }
 
 export const PublicationSchema = new mongoose.Schema({
+    _type: String,
     FirstChar: String,
     Title: String,
     Series: String,

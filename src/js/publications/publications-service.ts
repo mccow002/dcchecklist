@@ -1,4 +1,5 @@
 import {app} from '../checklist-app';
+import { IPublication } from './publication-model';
 
 export class PubService {
 
@@ -6,12 +7,12 @@ export class PubService {
 
     constructor(private $q: ng.IQService, private $http: ng.IHttpService) {}
 
-    public load(index: String): ng.IPromise<any>{
+    public load(index: String): ng.IPromise<IPublication[]>{
         let q = this.$q.defer();
         let req = this.$http.get('/api/getall/' + index);
 
-        req.success((data: any) => {
-            q.resolve(data.pubs);
+        req.success((data: ng.IHttpPromiseCallback<IPublication[]>) => {
+            q.resolve(data);
         });
 
         req.error(() => {
@@ -21,7 +22,22 @@ export class PubService {
         return q.promise;
     } 
 
-    public Put(pub: any): ng.IPromise<any> {
+    public Search(search: string): ng.IPromise<IPublication[]>{
+        var q = this.$q.defer();
+        var req = this.$http.get('/api/search/' + search);
+
+        req.success(function(data: ng.IHttpPromiseCallback<IPublication[]>){
+            q.resolve(data);
+        });
+
+        req.error(function(){
+            q.reject();
+        });
+
+        return q.promise;
+    }
+
+    public Put(pub: any): ng.IPromise<IPublication> {
         var q = this.$q.defer();
         var req = this.$http.put('/api/', pub);
 
@@ -36,7 +52,7 @@ export class PubService {
         return q.promise;
     }
 
-    public Delete(pub: any): ng.IPromise<any> {
+    public Delete(pub: any): ng.IPromise<IPublication> {
         var q = this.$q.defer();
         let req = this.$http.delete('/api/' + pub._id);
 
