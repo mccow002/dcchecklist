@@ -1,6 +1,6 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
-import { Publication, IPublication } from '../models/comic';
+import { Publication, IPublication } from '../models/publication';
 
 class PublicationsApi {
 
