@@ -23,4 +23,4 @@ export const PublicationSchema = new mongoose.Schema({
 });
 PublicationSchema.index({'$**': 'text'});
 
-export const Publication = mongoose.model<IPublication>('publications', PublicationSchema);
+export const Publication = mongoose.model<IPublication>('publication', PublicationSchema, 'dccollection');

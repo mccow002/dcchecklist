@@ -9,7 +9,7 @@ export class PubService {
 
     public load(index: String): ng.IPromise<IPublication[]>{
         let q = this.$q.defer();
-        let req = this.$http.get('/api/getall/' + index);
+        let req = this.$http.get('/pubapi/getall/' + index);
 
         req.success((data: ng.IHttpPromiseCallback<IPublication[]>) => {
             q.resolve(data);
@@ -24,7 +24,7 @@ export class PubService {
 
     public Search(search: string): ng.IPromise<IPublication[]>{
         var q = this.$q.defer();
-        var req = this.$http.get('/api/search/' + search);
+        var req = this.$http.get('/pubapi/search/' + search);
 
         req.success(function(data: ng.IHttpPromiseCallback<IPublication[]>){
             q.resolve(data);
@@ -39,7 +39,7 @@ export class PubService {
 
     public Put(pub: any): ng.IPromise<IPublication> {
         var q = this.$q.defer();
-        var req = this.$http.put('/api/', pub);
+        var req = this.$http.put('/pubapi/', pub);
 
         req.success(() => {
             q.resolve();
@@ -54,7 +54,7 @@ export class PubService {
 
     public Delete(pub: any): ng.IPromise<IPublication> {
         var q = this.$q.defer();
-        let req = this.$http.delete('/api/' + pub._id);
+        let req = this.$http.delete('/pubapi/' + pub._id);
 
         req.success(() => {
             q.resolve();

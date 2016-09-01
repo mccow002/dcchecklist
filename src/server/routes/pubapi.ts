@@ -1,12 +1,12 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 import { Publication, IPublication } from '../models/publication';
+import { Config } from '../../config'
 
 class PublicationsApi {
 
     constructor() {
-        const url = 'mongodb://localhost:27017/comics';
-        mongoose.connect(url);
+        mongoose.connect(Config.DbConnection);
     }
 
     public GetAll(req: express.Request, res: express.Response) {

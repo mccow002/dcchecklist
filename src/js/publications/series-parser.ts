@@ -85,5 +85,7 @@ class SpecialCaseParser implements IParser {
         if(osReg.test(pub.Notes)){
             return new ParseResult(1, 1);
         }
+
+        return new ParseResult();
     }
 }

@@ -1,15 +1,36 @@
 .modal-body
-	form
-		.form-group
-			label First Issue
-				input.form-control(type="text", ng-model="ps.issues.First")
+	.container-fluid
+		.row
+			.col-md-6
+				form
+					.form-group
+						label Volume
+							input.form-control(type="text", ng-model="ps.issues.Volume")
 
-			.form-group
-				label Last Issue
-					input.form-control(type="text", ng-model="ps.issues.Last")
-		div
-			b Issue Text: {{ps.issuesText}}
+					.form-group
+						label First Issue
+							input.form-control(type="text", ng-model="ps.issues.First")
+
+					.form-group
+						label Last Issue
+							input.form-control(type="text", ng-model="ps.issues.Last")
+			
+			.col-md-6
+				div
+					h4 {{ps.publication.Title}}
+				div
+					label Series: 
+					span {{ps.publication.Series}}
+				div
+					label Issues: 
+					span {{ps.publication.Issues}}
+				div
+					label Dates: 
+					span {{ps.publication.Dates}}
+				div
+					label Notes: 
+					span {{ps.publication.Notes}}
 
 .modal-footer
 	button.btn.btn-default(ng-click="ps.cancel()") Cancel
-	button.btn.btn-primary Parse
+	button.btn.btn-primary(ng-click="ps.parse()") Parse

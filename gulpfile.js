@@ -54,7 +54,7 @@ var bundle = function () {
 //Watch task
 gulp.task('watch',function() {
     gulp.watch('src/css/*.scss',['sass']);
-    gulp.watch('*.ts', ['typescript'], function(){
+    gulp.watch('src/**/*.ts', ['typescript'], function(){
         bundle();
     })
 });

@@ -30,7 +30,7 @@ app.use('/templates', express.static(path.join(__dirname, '/templates')));
 
 app.use('/', routes);
 //app.use('/users', users);
-app.use('/api', api);
+app.use('/pubapi', api);
 app.use('/partials', partials);
 app.use('/seriesapi', seriesapi);
 
