@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 import { Publication, IPublication } from '../models/publication';
-import { Config } from '../../config'
+import { Config } from '../config'
 
 class PublicationsApi {
 

@@ -6,8 +6,12 @@ var tsify = require('tsify');
 var source = require('vinyl-source-stream');
 var transform = require('vinyl-transform');
 var uglify = require('gulp-uglify');
-var sourcemaps = require('gulp-sourcemaps')
-
+var sourcemaps = require('gulp-sourcemaps');
+var watchify = require('gulp-watchify');
+var buffer = require('vinyl-buffer');
+var livereload = require('gulp-livereload');
+var notify = require('gulp-notify');
+var connect = require('gulp-connect');
 
 var tsProject = ts.createProject('tsconfig.json');
 
@@ -15,15 +19,18 @@ gulp.task('sass', function(){
     return gulp.src('src/css/*.scss')
         .pipe(sass().on('error', sass.logError))
         .pipe(gulp.dest('./dist/css'));
+        //.pipe(connect.reload());
 });
 
 gulp.task('typescript', function(){
     return tsProject.src()
         .pipe(ts(tsProject))
-        .js.pipe(gulp.dest('./dist'));
+        .js.pipe(gulp.dest('./dist/server'));
+        //.pipe(notify('Finished compiling typescript'))
+        //.pipe(livereload());
 });
 
-var bundle = function () {
+gulp.task('browserify', function () {
 
     return browserify({
         basedir: '.',
@@ -35,30 +42,25 @@ var bundle = function () {
     .plugin(tsify)
     .bundle()
     .pipe(source('bundle.js'))
-    .pipe(gulp.dest("dist/js"));
+    .pipe(buffer())
+    .pipe(sourcemaps.init({loadMaps: true}))
+    .pipe(uglify())
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest("dist/js"))
+    .pipe(notify('Finished browserify'));
+    //.pipe(livereload());
+});
 
-  // transform regular node stream to gulp (buffered vinyl) stream
-//   var browserified = transform(function(filename) {
-//       var b = browserify({ entries: filename, debug: true });
-//       return b.bundle();
-//   });
+gulp.task('connect', function() {
+  connect.server({
+    root: '/',
+    livereload: true
+  });
+});
 
-//   return gulp.src('./dist/js/js/checklist-app.js')
-//              .pipe(browserified)
-//              .pipe(sourcemaps.init({ loadMaps: true }))
-//              .pipe(uglify())
-//              .pipe(sourcemaps.write('./'))
-//              .pipe(gulp.dest('./dist/js/js/main.js'));
-};
-
-//Watch task
-gulp.task('watch',function() {
+gulp.task('watch', function() {
     gulp.watch('src/css/*.scss',['sass']);
-    gulp.watch('src/**/*.ts', ['typescript'], function(){
-        bundle();
-    })
+    gulp.watch('src/**/*.ts', ['typescript', 'browserify']);
 });
 
-gulp.task('build', ['sass', 'typescript'], function(){
-    bundle();
-});
+gulp.task('build', ['sass', 'typescript', 'browserify']);

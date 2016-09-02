@@ -5,6 +5,7 @@ export interface ISeries {
     Name: String,
     Volume: Number,
     NumberOfIssues: Number,
+    SeriesType: String,
     Issues: Array<IIssue>
 }
 
@@ -13,6 +14,7 @@ export class Series implements ISeries {
     Name: String;
     Volume: Number;
     NumberOfIssues: Number;
+    SeriesType: String;
     Issues: Array<IIssue>;
 
     constructor(name: string, volume: number) {

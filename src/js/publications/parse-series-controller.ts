@@ -15,6 +15,7 @@ class Issues {
     First: number;
     Last: number;
     Volume: number;
+    VolumeType: string;
 }
 
 export class ParseSeriesController {
@@ -24,7 +25,10 @@ export class ParseSeriesController {
     publication: IPublication;
     issues: Issues;
 
-    constructor(private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private pub: IPublication, private seriesService: SeriesService) {
+    constructor(
+        private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, 
+        private pub: IPublication, 
+        private seriesService: SeriesService) {
         //pub.Title = "WHOO!";
         this.publication = pub;
 
@@ -36,7 +40,7 @@ export class ParseSeriesController {
             this.issues.Volume = 1;
         } else {
             var volReg = new RegExp('[0-9]+', 'g');
-            let r =volReg.exec(pub.Series);
+            let r = volReg.exec(pub.Series);
 
             this.issues.Volume = Number(r[0]);
         }
@@ -46,8 +50,13 @@ export class ParseSeriesController {
         this.$uibModalInstance.dismiss('cancel');
     }
 
-    parse(){
+    parse() {
         let series = new Series(this.pub.Title, this.issues.Volume);
+
+        if(this.issues.VolumeType !== ''){
+            series.SeriesType = this.issues.VolumeType;
+        }
+
         for(let i = this.issues.First; i <= this.issues.Last; i++) {
             let issue = new Issue(i);
             series.Issues.push(issue);

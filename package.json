@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "concurrently \"gulp watch\" \"nodemon ./bin/www\""
+    "start": "gulp build && concurrently \"gulp watch\" \"nodemon ./bin/www\""
   },
   "dependencies": {
     "angular": "^1.5.8",
@@ -26,17 +26,24 @@
     "browserify": "^13.1.0",
     "concurrently": "^2.2.0",
     "gulp": "^3.9.1",
+    "gulp-connect": "^5.0.0",
+    "gulp-livereload": "^3.8.1",
+    "gulp-notify": "^2.2.0",
     "gulp-sass": "^2.3.2",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-tslint": "^6.1.1",
     "gulp-typescript": "^2.13.6",
     "gulp-uglify": "^2.0.0",
+    "gulp-watchify": "^0.6.0",
+    "livereload": "^0.5.0",
     "nodemon": "^1.10.2",
     "reload": "^1.0.1",
     "tsify": "^1.0.4",
     "tslint": "^3.15.1",
     "typescript": "^1.8.10",
+    "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "vinyl-transform": "^1.0.0"
+    "vinyl-transform": "^1.0.0",
+    "watchify": "^3.7.0"
   }
 }
