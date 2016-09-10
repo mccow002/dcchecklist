@@ -1,0 +1,56 @@
+div
+    nav.navbar.navbar-default
+        .container-fluid
+            .collapse.navbar-collapse
+                ul.nav.navbar-nav
+                    li
+                        a(ng-click='id.linkIssue($event)')
+                            i.fa.fa-link
+                            span  Link
+                    li(ng-if='id.Issue.FilePath !== undefined')
+                        a(ng-click='id.getMetadata()') Load Metadata
+                ul.nav.navbar-nav.navbar-right(ng-if='id.Issue.FilePath !== undefined')
+                    li
+                        p.navbar-btn
+                            a.btn.btn-primary(ng-click='id.open()') Open
+    .row
+        .col-md-6
+            .row
+                .col-md-12
+                    h2 {{id.Issue.Title}}
+            .row
+                .col-md-12
+                    span.text-muted {{id.getMonth(id.Issue.Month)}} {{id.Issue.Year}}
+            .row.top-buffer
+                .col-md-12
+                    p {{id.Issue.Summary}}
+            .row
+                .col-md-12
+                    legend Characters
+                    div {{id.Issue.Characters}}
+            .row.top-buffer
+                .col-md-12
+                    legend Teams
+                    div {{id.Issue.Teams}}
+            .row.top-buffer
+                .col-md-12
+                    legend Locations
+                    div {{id.Issue.Locations}}
+            
+        .col-md-6
+            small {{id.Issue.FilePath}}
+            .well.text-center(ng-if='id.Issue.FilePath !== undefined')
+                img(ng-src='{{id.getCoverUrl()}}', style='height: 550px')
+
+    div.overlay#image-modal(ng-style='{"height": id.ViewerOpen ? "100%" : "0"}', keypress-events, on-keydown='id.handleKeydown($event)', ng-swipe-left='id.next()', ng-swipe-right='id.previous()')
+        a.closebtn(ng-click='id.closeViewer()') &times;
+        a.left-arrow(ng-click='id.previous()')
+            i.fa.fa-arrow-left
+        a.right-arrow(ng-click='id.next()')
+            i.fa.fa-arrow-right
+        .overlay-content
+            .progress.page-loader(ng-if='id.PageLoading === true')
+                div.progress-bar.progress-bar-info.progress-bar-striped.active(style='width:100%')
+            img(ng-src='data:image/jpeg;base64, {{id.ViewerImage}}', ng-style='{"height": id.ViewerHeight}')
+            .progress.page-progress
+                div.progress-bar.progress-bar-success(ng-style='{"width": id.Progress}')

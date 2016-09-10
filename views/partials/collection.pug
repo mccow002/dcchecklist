@@ -1,0 +1,23 @@
+.row
+    .col-md-3
+        nav.navbar.navbar-default
+            .container-fluid
+                .collapse.navbar-collapse
+                    ul.nav.navbar-nav(ng-if='c.SelectedFolder !== undefined && c.SelectedFolder._type !== "List"')
+                        li
+                            a(ng-click='c.addFolder()')
+                                i.fa.fa-plus.fa-fw
+                                span Folder
+                        li
+                            a(ng-click='c.addList()')
+                                i.fa.fa-plus.fa-fw
+                                span List
+
+        treecontrol.tree-classic(tree-model='c.TreeModel', 
+            options='c.TreeOptions', 
+            selected-node='c.SelectedFolder', 
+            on-selection="c.selectFolder(node)",
+            expanded-nodes='c.ExpandedNodes',
+            on-node-toggle='c.nodeToggle(node)') {{node.Name}}
+    .col-md-8
+        div {{c.ExpandedNodes}}

@@ -1,14 +1,143 @@
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background: red;
+  padding-top: 20px;
 }
 
 a {
   color: #00B7FF;
 }
 
-.header h3 {
-  margin-top: 0;
-  margin-bottom: 0;
-  line-height: 40px;
+.header {
+
+  h3 { 
+    margin-top: 0;
+    margin-bottom: 20px;
+    line-height: 40px;
+  }
 }
+
+.navbar-form {
+  margin: 20px 0;
+}
+
+h2 {
+  margin-top: 5px;
+}
+
+/* The Overlay (background) */
+.overlay {
+    /* Height & width depends on how you want to reveal the overlay (see JS below) */    
+    height: 0;
+    width: 100%;
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    background-color: rgb(0,0,0); /* Black fallback color */
+    background-color: rgba(0,0,0, 0.9); /* Black w/opacity */
+    overflow-x: hidden; /* Disable horizontal scroll */
+    transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
+
+    /* Position the content inside the overlay */
+    .overlay-content {
+        position: relative;
+        top: 0; /* 25% from the top */
+        width: 100%; /* 100% width */
+        text-align: center; /* Centered text/links */
+    }
+
+    a {
+        padding: 8px;
+        text-decoration: none;
+        font-size: 36px;
+        color: #818181;
+        display: block; /* Display block instead of inline */
+        transition: 0.3s; /* Transition effects on hover (color) */
+
+        &:hover, &:focus {
+          color: #f1f1f1;
+        }
+    }
+
+    .closebtn {
+        position: absolute;
+        top: 20px;
+        right: 45px;
+        font-size: 60px;
+        z-index: 2000;
+    }
+
+    .left-arrow {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      z-index: 1000;
+      
+      i {
+        position: absolute;
+        top: 50%;
+      }
+    }
+
+    .right-arrow {
+      position: absolute;
+      left: 50%;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      z-index: 1000;
+
+      i {
+        position: absolute;
+        top: 50%;
+        right: 0;
+      }
+    }
+}
+
+/* When the height of the screen is less than 450 pixels, change the font-size of the links and position the close button again, so they don't overlap */
+@media screen and (max-height: 450px) {
+    .overlay a {font-size: 20px}
+    .overlay .closebtn {
+        font-size: 40px;
+        top: 15px;
+        right: 35px;
+    }
+}
+
+.scroll-window {
+  height: 400px;
+  overflow-y: auto;
+}
+
+.top-buffer {
+  margin-top: 20px;
+}
+
+.page-loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+}
+
+.page-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 15px;
+  margin: 0;
+}
+
+.tree-node-override {
+  background: none !important;
+}
+
+.navbar-xs .navbar-primary .navbar { min-height:28px; height: 28px; }
+.navbar-xs .navbar-primary .navbar .navbar-brand{ padding: 0px 12px;font-size: 16px;line-height: 28px; }
+.navbar-xs .navbar-primary .navbar .navbar-nav > li > a {  padding-top: 0px; padding-bottom: 0px; line-height: 28px; }

@@ -1,0 +1,13 @@
+.modal-header
+    h2 Link Issue to File
+.modal-body
+    .container-fluid
+        .row
+            .col-md-12
+                form.form-horizontal
+                    .form-group
+                        label File Path:
+                        input.form-control(type='text', ng-model='li.Issue.FilePath')
+.modal-footer
+    button.btn.btn-default(ng-click="li.cancel()") Cancel
+    button.btn.btn-primary(ng-click="li.link()") Link

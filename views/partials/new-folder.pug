@@ -1,0 +1,14 @@
+.modal-header
+    h3 {{nf.Title}}
+.modal-body
+    .container-fluid
+        .row
+            .col-md-12
+                form.form-horizontal
+                    .form-group
+                        label {{nf.Label}}
+                        input.form-control(type='text', ng-model='nf.FolderName')
+
+.modal-footer
+    button.btn.btn-default(ng-click="nf.cancel()") Cancel
+    button.btn.btn-primary(ng-click="nf.add()") Add

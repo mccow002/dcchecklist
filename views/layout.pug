@@ -2,24 +2,31 @@ doctype html
 html(ng-app='checklist')
   head
     title DC Checklist
-    link(rel='stylesheet', href='/dist/css/style.css')
     link(rel='stylesheet', href='/bootstrap/bootstrap.css')
     link(rel='stylesheet', href='/fontawesome/css/font-awesome.css')
+    link(rel='stylesheet', href='/toastr/angular-toastr.css')
+    link(rel='stylesheet', href='/treecontrol/css/tree-control.css')
+    link(rel='stylesheet', href='/treecontrol/css/tree-control-attribute.css')
+    link(rel='stylesheet', href='/dist/css/style.css')
     //- link(rel='stylesheet', href='/bower_components/angular-bootstrap/ui-bootstrap-csp.css')
 
     script(src='http://localhost:35729/livereload.js')
+    script(src='/jquery/jquery.js')
+    //-script(src='/angular/angular.js')
+    //-script(src='/treecontrol/angular-tree-control.js')
+    script(src='/socket.io/socket.io.js')
     script(src='/dist/js/bundle.js')
   body
     .container-fluid
       .header.clearfix
         nav
           .nav.nav-pills.pull-right
-            li
-              a(href='#') Publications
-            li
-              a(href='#') Series
-            li
-              a(href='#') Collection
+            li(ui-sref-active='active')
+              a(ui-sref='publications') Publications
+            li(ui-sref-active='active')
+              a(ui-sref='series') Series
+            li(ui-sref-active='active')
+              a(ui-sref='collection') Collection
 
         h3(class='text-muted') DC Checklist
 

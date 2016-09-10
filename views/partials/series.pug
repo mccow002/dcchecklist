@@ -1,0 +1,5 @@
+div(ng-controller='seriesCtrl as sr')
+    table.table
+        tr(ng-repeat='s in sr.Series')
+            td 
+                a(ui-sref='seriesDetails({seriesId:s._id})') {{s.Name}}

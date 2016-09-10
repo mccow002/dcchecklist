@@ -1,0 +1,20 @@
+.modal-header
+    h2 Link Series to Folder
+.modal-body
+    .container-fluid
+        .row
+            .col-md-12
+                label File Path:
+                input.form-control(type='text', ng-model='ls.FilePath', style='margin-bottom: 10px')
+        .row
+            .col-md-12
+                btn.btn.btn-default.pull-right(ng-click='ls.scanFolder()', ng-disabled='ls.FilePath === ""') Scan Folder
+        .row
+            div.scroll-window
+                ul.nav.nav-pills.nav-stacked
+                    li(ng-repeat='f in ls.Files', ng-class='{active: ls.SelectedFile == f}')
+                        a(ng-click='ls.SelectedFile = f') {{f}}
+
+.modal-footer
+    button.btn.btn-default(ng-click="ls.cancel()") Cancel
+    button.btn.btn-primary(ng-click="ls.link()", ng-disabled='ls.SelectedFile === ""') Link

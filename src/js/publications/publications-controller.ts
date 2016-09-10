@@ -1,21 +1,31 @@
-import {app} from '../checklist-app';
-import {PubService} from './publications-service';
+import { app } from '../checklist-app';
+import { PubService } from './publications-service';
 import { IPublication } from './publication-model';
+import { ISeries } from '../series/series-model';
 
 class Search {
     SearchText: string
 }
 
+interface IPublisherParams extends ng.ui.IStateParamsService {
+    sort: string
+}
+
 export class PublicationsController {
 
-    static $inject = ['pubService', '$uibModal'];
+    static $inject = ['pubService', '$uibModal', '$stateParams', '$state', 'toastr'];
 
     Publications: Array<IPublication>;
     Indexes: Array<string>;
     Index: number;
     SearchParams: Search;
 
-    constructor(private pubService: PubService, private modal: ng.ui.bootstrap.IModalService) {
+    constructor(
+        private pubService: PubService, 
+        private modal: ng.ui.bootstrap.IModalService,
+        private $stateParams: IPublisherParams,
+        private $state: ng.ui.IStateService,
+        private toastr: ng.toastr.IToastrService) {
         
         this.Indexes = new Array<string>();
         this.Index = 0;
@@ -24,6 +34,10 @@ export class PublicationsController {
         this.Indexes.push("0-9");
         for(let i = 65;i<91;++i) {
             this.Indexes.push(String.fromCharCode(i));
+        }
+
+        if($stateParams.sort){
+            this.Index = this.Indexes.indexOf($stateParams.sort);
         }
 
         this.load();
@@ -38,8 +52,9 @@ export class PublicationsController {
     }
 
     loadSlice(index: number) {
-        this.Index = index;
-        this.load();
+        // this.Index = index;
+        // this.load();
+        return '#/publications/' + this.Indexes[index];
     }
 
     search() {
@@ -84,10 +99,15 @@ export class PublicationsController {
     ParseSeries(pub: IPublication) {
         let mi = this.modal.open({
             controller: 'parseSeriesCtrl as ps',
-            templateUrl: '/partials/parseSeries',
+            templateUrl: '/dist/views/parseSeries.html',
             resolve: {
                 pub: () => pub
             }
         });
-    };
-};
+
+        mi.result.then((series: ISeries) => {
+            this.toastr.success('Series parsed!');
+            this.$state.go('series');
+        });
+    }
+}

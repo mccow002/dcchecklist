@@ -1,7 +1,7 @@
 import {app} from '../checklist-app';
-import { IParseResult, ParseSeries } from './series-parser';
-import { IPublication } from './publication-model';
-import { IIssue, Issue } from '../series/issue-model';
+import { IParseIssueResult, ParseSeries } from './series-parser';
+import { IPublication } from '../publications/publication-model';
+import { IIssue, Issue } from '../issues/issue-model';
 import { ISeries, Series } from '../series/series-model';
 import { SeriesService } from '../series/series-service';
 
@@ -20,21 +20,38 @@ class Issues {
 
 export class ParseSeriesController {
 
-    static $inject = ['$uibModalInstance', 'pub', 'seriesService'];
+    static $inject = ['$uibModalInstance', 'pub', 'seriesService', 'Months'];
 
     publication: IPublication;
     issues: Issues;
+    Years: Array<number> = [];
+
+    StartMonth: string;
+    StartYear: number;
+    EndMonth: string;
+    EndYear: number;
 
     constructor(
         private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, 
         private pub: IPublication, 
-        private seriesService: SeriesService) {
+        private seriesService: SeriesService,
+        private Months: Array<string>) {
         //pub.Title = "WHOO!";
         this.publication = pub;
 
         let parser = new ParseSeries();
-        let result = parser.Parse(pub);
+        let result = parser.ParseIssues(pub);
         this.issues = new Issues(result.First, result.Last);
+
+        let dateResult = parser.ParseDate(pub);
+        console.log(JSON.stringify(dateResult));
+        if(dateResult.Success) {
+            console.log(dateResult.Start.getMonth());
+            this.StartMonth = this.Months[dateResult.Start.getMonth()];
+            this.StartYear = dateResult.Start.getFullYear();
+            this.EndMonth = this.Months[dateResult.End.getMonth()];
+            this.EndYear = dateResult.End.getFullYear();
+        }
 
         if(pub.Series === '') {
             this.issues.Volume = 1;
@@ -44,6 +61,10 @@ export class ParseSeriesController {
 
             this.issues.Volume = Number(r[0]);
         }
+
+        for(let y = 1938; y <= new Date().getFullYear(); y++) {
+            this.Years.push(y);
+        }
     }
 
     cancel() {
@@ -52,6 +73,8 @@ export class ParseSeriesController {
 
     parse() {
         let series = new Series(this.pub.Title, this.issues.Volume);
+        series.StartDate = new Date(this.StartYear, this.Months.indexOf(this.StartMonth));
+        series.EndDate = new Date(this.EndYear, this.Months.indexOf(this.EndMonth));
 
         if(this.issues.VolumeType !== ''){
             series.SeriesType = this.issues.VolumeType;
@@ -62,7 +85,8 @@ export class ParseSeriesController {
             series.Issues.push(issue);
         }
 
-        this.seriesService.Create(series);
+        this.seriesService.Create(series)
+            .then((result) => this.$uibModalInstance.close(series));
     }
 
 }
