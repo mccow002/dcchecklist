@@ -6,7 +6,7 @@ import { Config } from '../config'
 class PublicationsApi {
 
     constructor() {
-        mongoose.connect(Config.DbConnection);
+        //mongoose.connect(Config.DbConnection);
     }
 
     public GetAll(req: express.Request, res: express.Response) {

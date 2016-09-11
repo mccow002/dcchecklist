@@ -127,17 +127,19 @@ h2 {
 
 .page-progress {
   position: absolute;
-  bottom: 0;
   left: 0;
   right: 0;
   height: 15px;
   margin: 0;
+
+  .progress-bar {
+    line-height: 15px;
+    text-align: left;
+    font-size: 10px;
+    padding-left: 10px;
+  }
 }
 
 .tree-node-override {
   background: none !important;
 }
-
-.navbar-xs .navbar-primary .navbar { min-height:28px; height: 28px; }
-.navbar-xs .navbar-primary .navbar .navbar-brand{ padding: 0px 12px;font-size: 16px;line-height: 28px; }
-.navbar-xs .navbar-primary .navbar .navbar-nav > li > a {  padding-top: 0px; padding-bottom: 0px; line-height: 28px; }

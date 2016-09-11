@@ -53,4 +53,4 @@ div
                 div.progress-bar.progress-bar-info.progress-bar-striped.active(style='width:100%')
             img(ng-src='data:image/jpeg;base64, {{id.ViewerImage}}', ng-style='{"height": id.ViewerHeight}')
             .progress.page-progress
-                div.progress-bar.progress-bar-success(ng-style='{"width": id.Progress}')
+                div.progress-bar.progress-bar-success(ng-style='{"width": id.Progress}') {{id.CurrentPage + 1}}/{{id.IssuePages.length}}

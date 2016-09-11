@@ -61,6 +61,7 @@ app.use('/readerapi', readerapi);
 
 //connect to mongodb
 // console.log(Config.DbConnection);
+mongoose.connect(Config.DbConnection);
 // app.locals.db = mongoose.connect(Config.DbConnection);
 
 // catch 404 and forward to error handler
