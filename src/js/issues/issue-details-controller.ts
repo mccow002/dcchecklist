@@ -136,6 +136,12 @@ export class IssueDetailsController {
             this.$scope.$apply(() => this.closeViewer());
         }
     }
+
+    onResize() {
+        this.$scope.$apply(() => {
+            this.ViewerHeight = (this.$window.innerHeight - 15) + 'px';
+        });
+    }
 }
 
 export class LinkIssueController {

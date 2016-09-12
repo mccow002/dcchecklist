@@ -1,5 +1,13 @@
-div(ng-controller='seriesCtrl as sr')
-    table.table
-        tr(ng-repeat='s in sr.Series')
-            td 
-                a(ui-sref='seriesDetails({seriesId:s._id})') {{s.Name}}
+nav.navbar.navbar-default
+        .container-fluid
+            .collapse.navbar-collapse
+                ul.nav.navbar-nav
+                    li
+                        a(ng-click='sr.addSeries()')
+                            i.fa.fa-plus.fa-fw
+                            span  New Series
+
+table.table
+    tr(ng-repeat='s in sr.Series')
+        td 
+            a(ui-sref='seriesDetails({seriesId:s._id})') {{s.Name}}

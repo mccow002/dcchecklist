@@ -10,11 +10,11 @@
                     span Link Series    
 
     .row
-        .col-md-2
+        .col-sm-2
             ul.nav.nav-pills.nav-stacked
                 li(ng-repeat='issue in sr.Series.Issues', ui-sref-active='active')
                     a(ui-sref='.Issue({issueId: issue._id})') 
                         span {{sr.Series.Name}} - {{issue.Number}}
                         i.fa.fa-link.fa-fw.pull-right(ng-if='issue.FilePath !== undefined')
-        .col-md-10
+        .col-sm-10
             ui-view

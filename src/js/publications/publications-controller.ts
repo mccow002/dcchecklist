@@ -13,15 +13,16 @@ interface IPublisherParams extends ng.ui.IStateParamsService {
 
 export class PublicationsController {
 
-    static $inject = ['pubService', '$uibModal', '$stateParams', '$state', 'toastr'];
+    static $inject = ['$rootScope', 'pubService', '$uibModal', '$stateParams', '$state', 'toastr'];
 
     Publications: Array<IPublication>;
     Indexes: Array<string>;
     Index: number;
     SearchParams: Search;
-    Loading: boolean = true;
+    Loading: boolean;
 
     constructor(
+        private $rootScope: ng.IRootScopeService,
         private pubService: PubService, 
         private modal: ng.ui.bootstrap.IModalService,
         private $stateParams: IPublisherParams,
@@ -31,6 +32,9 @@ export class PublicationsController {
         this.Indexes = new Array<string>();
         this.Index = 0;
         this.SearchParams = new Search();
+
+        this.$rootScope.$on('loading:progress', () => this.Loading = true);
+        this.$rootScope.$on('loading:finish', () => this.Loading = false);
 
         this.Indexes.push("0-9");
         for(let i = 65;i<91;++i) {

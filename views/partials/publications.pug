@@ -11,10 +11,15 @@ div
                 button(class='btn btn-default', type='submit', ng-click='ck.search()')
                     i.fa.fa-search
 
-    div.progress(ng-if='ck.Publications.length === 0')
-        div.progress-bar.progress-bar-striped.active(style='width: 100%')
+    .progress(ng-if='ck.Loading')
+        .progress-bar.progress-bar-striped.active(style='width: 100%')
 
-    table.table(ng-if='ck.Publications.length > 0')
+    
+    .row(ng-if='ck.SearchParams.SearchText !== "" && !ck.Loading')
+        .col-md-12.text-center
+            div No Search Results Found!
+
+    table.table(ng-if='!ck.Loading && ck.Publications.length > 0')
         thead
             tr
                 th

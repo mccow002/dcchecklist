@@ -1,11 +1,15 @@
 import { PublicationsController } from './publications/publications-controller';
+import * as http from './http-interceptor-factory';
 
 export class AppConfig {
 
-    static $inject = ['$stateProvider', '$urlRouterProvider'];
+    static $inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider'];
 
     constructor($stateProvider: ng.ui.IStateProvider,
-        $urlRouteProvider: ng.ui.IUrlRouterProvider){
+        $urlRouteProvider: ng.ui.IUrlRouterProvider,
+        $httpProvider: ng.IHttpProvider){
+            $httpProvider.interceptors.push('httpInterceptor');
+
             $stateProvider
                 .state('publications', {
                     url: '/publications/:sort?',
@@ -15,7 +19,7 @@ export class AppConfig {
                 .state('series', {
                     url: '/series',
                     templateUrl: '/dist/views/series.html',
-                    controller: 'seriesCtrl'
+                    controller: 'seriesCtrl as sr'
                 })
                 .state('seriesDetails', {
                     url: '/series/:seriesId',

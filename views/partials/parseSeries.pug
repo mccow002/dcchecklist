@@ -3,26 +3,30 @@
 .modal-body
 	.container-fluid
 		.row
-			.col-md-6
+			div(ng-class='ps.getWidthClass()')
 				form.form-horizontal
 					.form-group
-						label Volume
+						label Series Name: 
+						input.form-control(type="text", ng-model="ps.issues.Title")
+
+					.form-group
+						label Volume:
 						input.form-control(type="text", ng-model="ps.issues.Volume")
 
 					.form-group
-						label Volume Type
+						label Volume Type:
 						input.form-control(type="text", ng-model="ps.issues.VolumeType")
 
 					.form-group
-						label First Issue
+						label First Issue:
 						input.form-control(type="text", ng-model="ps.issues.First")
 
 					.form-group
-						label Last Issue
+						label Last Issue:
 						input.form-control(type="text", ng-model="ps.issues.Last")
 
 					.form-group
-						label Start Date
+						label Start Date:
 						.row
 							.col-md-6
 								select.form-control(ng-options='opt for opt in ps.Months track by opt', ng-model='ps.StartMonth')
@@ -30,14 +34,14 @@
 								select.form-control(ng-options='opt for opt in ps.Years track by opt', ng-model='ps.StartYear')
 
 					.form-group
-						label End Date
+						label End Date:
 						.row
 							.col-md-6
 								select.form-control(ng-options='opt for opt in ps.Months track by opt', ng-model='ps.EndMonth')
 							.col-md-6
 								select.form-control(ng-options='opt for opt in ps.Years track by opt', ng-model='ps.EndYear')
 			
-			.col-md-6
+			.col-md-6(ng-if='ps.publication !== null')
 				div
 					h4 {{ps.publication.Title}}
 				div

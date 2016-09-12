@@ -7,20 +7,17 @@ export module Directives {
                 scope: {
                     onKeydown: '&'
                 },
-                link: (scope: any, e: ng.IRootElementService, attr: any) => {
+                link: (scope: any, e: ng.IRootElementService) => {
                     //console.log('Binding Keydown Directive...');
                     $document.on('keydown', (e) => {
-                        //$rootScope.$broadcast('keypress', e, e.which)
                         scope.onKeydown({$event: e.which});
                     });
 
                     scope.$on('$destroy', () => {
-                        console.log('scope destroy!');
                         $document.off('keydown');
                     });
 
                     e.on('$destroy', () => {
-                        console.log('element destroy!');
                         $document.off('keydown');
                     });
                 }

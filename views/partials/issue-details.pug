@@ -5,7 +5,7 @@ div
                 ul.nav.navbar-nav
                     li
                         a(ng-click='id.linkIssue($event)')
-                            i.fa.fa-link
+                            i.fa.fa-link.fa-fw
                             span  Link
                     li(ng-if='id.Issue.FilePath !== undefined')
                         a(ng-click='id.getMetadata()') Load Metadata
@@ -42,13 +42,17 @@ div
             .well.text-center(ng-if='id.Issue.FilePath !== undefined')
                 img(ng-src='{{id.getCoverUrl()}}', style='height: 550px')
 
-    div.overlay#image-modal(ng-style='{"height": id.ViewerOpen ? "100%" : "0"}', keypress-events, on-keydown='id.handleKeydown($event)', ng-swipe-left='id.next()', ng-swipe-right='id.previous()')
+    div.overlay#image-modal(ng-style='{"height": id.ViewerOpen ? "100%" : "0"}', 
+        keypress-events, 
+        on-keydown='id.handleKeydown($event)', 
+        ng-swipe-left='id.next()', 
+        ng-swipe-right='id.previous()')
         a.closebtn(ng-click='id.closeViewer()') &times;
         a.left-arrow(ng-click='id.previous()')
             i.fa.fa-arrow-left
         a.right-arrow(ng-click='id.next()')
             i.fa.fa-arrow-right
-        .overlay-content
+        .overlay-content(window-resize, on-resize='id.onResize()')
             .progress.page-loader(ng-if='id.PageLoading === true')
                 div.progress-bar.progress-bar-info.progress-bar-striped.active(style='width:100%')
             img(ng-src='data:image/jpeg;base64, {{id.ViewerImage}}', ng-style='{"height": id.ViewerHeight}')

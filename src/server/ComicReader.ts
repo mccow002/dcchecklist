@@ -19,7 +19,7 @@ export class ComicReader {
         rf.list((err: any, entries: any) => {
             var regex = () => /[0-9]{2}/g;
             var pages = new Array<any>();
-
+            
             for(let i = 0; i < entries.length; i++) {
                 if(!regex().test(entries[i].name))
                     continue;

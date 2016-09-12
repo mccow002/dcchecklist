@@ -12,8 +12,10 @@ import { SeriesService } from './series/series-service';
 import { PubService } from './publications/publications-service';
 import { IssueService } from './issues/issue-service';
 import * as sockets from './socket-factory';
+import * as http from './http-interceptor-factory';
 
-import * as directives from './directives/keypress';
+import * as keypress from './directives/keypress';
+import * as resize from './directives/window-resize';
 import { AppConfig } from './app-config';
 
 require('angular-bootstrap-npm');
@@ -38,8 +40,10 @@ app.service('issueService', IssueService);
 
 app.factory('socket', sockets.Sockets.Factory);
 app.factory('pubsub', sockets.Sockets.PubSub);
+app.factory('httpInterceptor', http.Http.Interceptor);
 
-app.directive('keypressEvents', directives.Directives.Keypress);
+app.directive('keypressEvents', keypress.Directives.Keypress);
+app.directive('windowResize', resize.Directives.WindowResize);
 
 app.controller('rootCtrl', RootController);
 app.controller('publicationsCtrl', PublicationsController);

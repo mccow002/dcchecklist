@@ -36,35 +36,41 @@ export class ParseSeriesController {
         private pub: IPublication, 
         private seriesService: SeriesService,
         private Months: Array<string>) {
-        //pub.Title = "WHOO!";
         this.publication = pub;
 
-        let parser = new ParseSeries();
-        let result = parser.ParseIssues(pub);
-        this.issues = new Issues(result.First, result.Last);
+        if(pub !== null)
+        {
+            let parser = new ParseSeries();
+            let result = parser.ParseIssues(pub);
+            this.issues = new Issues(result.First, result.Last);
 
-        let dateResult = parser.ParseDate(pub);
-        console.log(JSON.stringify(dateResult));
-        if(dateResult.Success) {
-            console.log(dateResult.Start.getMonth());
-            this.StartMonth = this.Months[dateResult.Start.getMonth()];
-            this.StartYear = dateResult.Start.getFullYear();
-            this.EndMonth = this.Months[dateResult.End.getMonth()];
-            this.EndYear = dateResult.End.getFullYear();
-        }
+            let dateResult = parser.ParseDate(pub);
+            console.log(JSON.stringify(dateResult));
+            if(dateResult.Success) {
+                console.log(dateResult.Start.getMonth());
+                this.StartMonth = this.Months[dateResult.Start.getMonth()];
+                this.StartYear = dateResult.Start.getFullYear();
+                this.EndMonth = this.Months[dateResult.End.getMonth()];
+                this.EndYear = dateResult.End.getFullYear();
+            }
 
-        if(pub.Series === '') {
-            this.issues.Volume = 1;
-        } else {
-            var volReg = new RegExp('[0-9]+', 'g');
-            let r = volReg.exec(pub.Series);
+            if(pub.Series === '') {
+                this.issues.Volume = 1;
+            } else {
+                var volReg = new RegExp('[0-9]+', 'g');
+                let r = volReg.exec(pub.Series);
 
-            this.issues.Volume = Number(r[0]);
+                this.issues.Volume = Number(r[0]);
+            }
         }
 
         for(let y = 1938; y <= new Date().getFullYear(); y++) {
             this.Years.push(y);
         }
+    }
+
+    getWidthClass() {
+        return this.publication === null ? 'col-md-12' : 'col-md-6';
     }
 
     cancel() {
