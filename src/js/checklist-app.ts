@@ -11,8 +11,7 @@ import { RootController } from './root-controller';
 import { SeriesService } from './series/series-service';
 import { PubService } from './publications/publications-service';
 import { IssueService } from './issues/issue-service';
-import * as socket from './socket-factory';
-import * as pubsub from './issues/issue-sockets';
+import * as sockets from './socket-factory';
 
 import * as directives from './directives/keypress';
 import { AppConfig } from './app-config';
@@ -37,8 +36,8 @@ app.service('pubService', PubService);
 app.service('seriesService', SeriesService);
 app.service('issueService', IssueService);
 
-app.factory('socket', socket.Socket.Factory);
-app.factory('pubsub', pubsub.Sockets.Reader);
+app.factory('socket', sockets.Sockets.Factory);
+app.factory('pubsub', sockets.Sockets.PubSub);
 
 app.directive('keypressEvents', directives.Directives.Keypress);
 

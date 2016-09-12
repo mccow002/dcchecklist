@@ -1,6 +1,5 @@
 import { IIssue } from './issue-model';
 import { IssueService } from './issue-service';
-import { Socket } from '../socket-factory';
 
 interface IIssueRouteParams extends ng.ui.IStateParamsService {
     issueId: string;

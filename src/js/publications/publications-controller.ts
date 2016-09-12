@@ -19,6 +19,7 @@ export class PublicationsController {
     Indexes: Array<string>;
     Index: number;
     SearchParams: Search;
+    Loading: boolean = true;
 
     constructor(
         private pubService: PubService, 

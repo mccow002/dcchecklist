@@ -1,35 +1,4 @@
-// export class SocketFactory {
-
-//     static $inject = ['$rootScope'];
-
-//     io: any;
-
-//     constructor(private $rootScope: ng.IRootScopeService) {
-//         this.io = (<any>window).io.connect();
-//     }
-
-//     on(eventName: string, callback: (data: any) => void) {
-//         this.io.on(eventName, function () {  
-//             var args = arguments;
-//             this.$rootScope.$apply(function () {
-//             callback.apply(this.io, args);
-//             });
-//         });
-//     }
-
-//     emit(eventName: string, data: any, callback: () => void) {
-//         this.io.emit(eventName, data, function () {
-//             var args = arguments;
-//             this.$rootScope.$apply(function () {
-//             if (callback) {
-//                 callback.apply(this.io, args);
-//             }
-//             });
-//         });
-//     }
-// }
-
-export module Socket {
+export module Sockets {
     export function Factory($rootScope: ng.IRootScopeService) {
         let io = <SocketIO.Socket>(<any>window).io.connect();
         return {
@@ -58,4 +27,29 @@ export module Socket {
     }
 
     Factory.$inject = ['$rootScope'];
+}
+
+export module Sockets {
+    export function PubSub(socket: any) {
+        let container = new Array<string>();
+        return {
+            subscribe(name: string, callback: (args: any) => void) {
+                console.log('Subscribing to ' + name);
+                socket.on(name, callback);
+                container.push(name);
+            },
+            unsubAll() {
+                for(var i=0; i<container.length; i++){
+                    console.log('Unsubscribing from ' + container[i]);
+                    socket.unsubscribe(container[i]);
+                }
+
+                // socket.unsubscribe('pageLoaded');
+                // socket.unsubscribe('pagesLoaded');
+                container = new Array<string>();
+            }
+        }
+    }
+
+    PubSub.$inject = ['socket'];
 }

@@ -6,6 +6,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var io = require('socket.io');
+var Config =  require('./dist/server/config');
+console.log(Config);
 
 var comicReaderSockets = require('./dist/server/sockets/comicreadersocket');
 
@@ -61,7 +63,7 @@ app.use('/readerapi', readerapi);
 
 //connect to mongodb
 // console.log(Config.DbConnection);
-mongoose.connect(Config.DbConnection);
+mongoose.connect(Config.Config.DbConnection);
 // app.locals.db = mongoose.connect(Config.DbConnection);
 
 // catch 404 and forward to error handler
