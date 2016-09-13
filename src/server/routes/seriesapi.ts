@@ -115,25 +115,26 @@ class SeriesApi {
                 for(let i = 0; i < issues.length; i++) {
                     issues[i].FilePath = path.join(info.FolderPath, filteredFiles[i]);
                 }
+                console.log(issues);
 
-                var promises = new Array<q.IPromise<IIssue>>();
-                issues.forEach(i => {
-                    var d = q.defer();
-                    Issue.findByIdAndUpdate(i._id, i, (err, issue) => {
-                        d.resolve();
-                    });
-                    promises.push(d.promise);
-                });
+                // var promises = new Array<q.IPromise<IIssue>>();
+                // issues.forEach(i => {
+                //     var d = q.defer();
+                //     Issue.findByIdAndUpdate(i._id, i, (err, issue) => {
+                //         d.resolve();
+                //     });
+                //     promises.push(d.promise);
+                // });
 
-                q.allResolved(promises)
-                    .then(() => {
-                        Series.findOne({ _id: info.Series._id })
-                            .populate('Issues')
-                            .exec((err: mongoose.Error, result: ISeries) => {
-                                if(err) throw err;
-                                res.json(result);
-                            });
-                    })
+                // q.allSettled(promises)
+                //     .then(() => {
+                //         Series.findOne({ _id: info.Series._id })
+                //             .populate('Issues')
+                //             .exec((err: mongoose.Error, result: ISeries) => {
+                //                 if(err) throw err;
+                //                 res.json(result);
+                //             });
+                //     });
             });
 
         // var result  = scanReg().exec(files[i]);

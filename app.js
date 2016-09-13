@@ -51,7 +51,7 @@ app.use('/bootstrap', express.static(path.join(__dirname, '/node_modules/bootstr
 app.use('/toastr', express.static(path.join(__dirname, '/node_modules/angular-toastr/dist')));
 app.use('/jquery', express.static(path.join(__dirname, '/node_modules/jquery/dist')));
 app.use('/treecontrol', express.static(path.join(__dirname, 'node_modules/angular-tree-control')));
-app.use('/angular', express.static(path.join(__dirname, 'node_modules/angular')));
+app.use('/angular-material', express.static(path.join(__dirname, 'node_modules/angular-material')));
 
 app.use('/', routes);
 //app.use('/users', users);

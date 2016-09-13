@@ -7,6 +7,9 @@ import { DOMParser } from 'xmldom';
 import { IIssue } from './models/issue'
 var Unrar = require('unrar');
 var streamTo = require('stream-to-array');
+var imagemin = require('imagemin');
+var imageminMozjpeg = require('imagemin-mozjpeg');
+
 
 export class ComicReader {
 
@@ -33,9 +36,7 @@ export class ComicReader {
         return d.promise;
     }
 
-    public GetImageAsBase64(name: string): q.IPromise<PageData> {
-        console.log(name);
-
+    public GetImageBuffer(name: string): q.IPromise<PageData> {
         let d = q.defer();
 
         var rf = new Unrar(this.path);
@@ -50,8 +51,12 @@ export class ComicReader {
             }
             
             let buf = Buffer.concat(buffers)
-            let base64 = buf.toString('base64');
-            d.resolve(new PageData(name, base64));
+
+            imagemin.buffer(buf, {
+                plugins: [ imageminMozjpeg() ]
+            }).then((compressedBuf: Buffer) => {
+                d.resolve(new PageData(name, compressedBuf));
+            });
         });
 
         return d.promise;
@@ -84,10 +89,10 @@ export class ComicReader {
 
 export class PageData {
     Page: string;
-    ImageStr: string;
+    ImageBuffer: Buffer;
 
-    constructor(page: string, imageStr: string) {
+    constructor(page: string, imageStr: Buffer) {
         this.Page = page;
-        this.ImageStr = imageStr;
+        this.ImageBuffer = imageStr;
     }
 }

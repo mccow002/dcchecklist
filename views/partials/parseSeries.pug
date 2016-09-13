@@ -5,25 +5,25 @@
 		.row
 			div(ng-class='ps.getWidthClass()')
 				form.form-horizontal
-					.form-group
+					md-input-container
 						label Series Name: 
-						input.form-control(type="text", ng-model="ps.issues.Title")
+						input(ng-model="ps.issues.Title")
 
-					.form-group
+					md-input-container
 						label Volume:
-						input.form-control(type="text", ng-model="ps.issues.Volume")
+						input(type="text", ng-model="ps.issues.Volume")
 
-					.form-group
+					md-input-container
 						label Volume Type:
-						input.form-control(type="text", ng-model="ps.issues.VolumeType")
+						input(type="text", ng-model="ps.issues.VolumeType")
 
-					.form-group
+					md-input-container
 						label First Issue:
-						input.form-control(type="text", ng-model="ps.issues.First")
+						input(type="text", ng-model="ps.issues.First")
 
-					.form-group
+					md-input-container
 						label Last Issue:
-						input.form-control(type="text", ng-model="ps.issues.Last")
+						input(type="text", ng-model="ps.issues.Last")
 
 					.form-group
 						label Start Date:

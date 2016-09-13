@@ -3,7 +3,7 @@ import * as mongoose from 'mongoose';
 import * as q from 'q';
 import * as fs from 'fs';
 import { Issue, IIssue } from '../models/issue';
-import { ComicReader } from '../ComicReader';
+import { ComicReader, PageData } from '../ComicReader';
 var app = require('../../../app');
 var Unrar = require('unrar');
 var streamTo = require('stream-to-array');
@@ -29,23 +29,13 @@ class ReaderApi {
         var id = req.params.id;
         Issue.findById(id, (err: mongoose.Error, result: IIssue) => {
             var reader = new ComicReader(result.FilePath);
-            console.log(result);
+            
             reader.GetFiles()
                 .then((entries: any) => {
-                    var rf = new Unrar(result.FilePath);
-                    let stream = rf.stream(entries[0]);
-                    stream.on('error', console.log);
-
-                    streamTo(stream, (err: any, parts: any) => {
-                        let buffers = new Array<any>();
-                        for (let i = 0, l = parts.length; i < l ; ++i) {
-                            var part = parts[i]
-                            buffers.push((part instanceof Buffer) ? part : new Buffer(part))
-                        }
-                        
-                        let buf = Buffer.concat(buffers)
+                    reader.GetImageBuffer(entries[0])
+                    .then((pageData: PageData) => {
                         res.writeHead(200, { 'Content-Type': 'image/jpeg' });
-                        res.end(buf, 'binary');
+                        res.end(pageData.ImageBuffer, 'binary');
                     });
                 });
         });

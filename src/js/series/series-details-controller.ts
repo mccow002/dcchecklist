@@ -7,7 +7,7 @@ interface ISeriesDetailsRouteParams extends ng.ui.IStateParamsService {
 
 export class SeriesDetailsController {
 
-    static $inject = ['$stateParams', '$state', '$uibModal', 'toastr', 'seriesService'];
+    static $inject = ['$stateParams', '$state', '$uibModal', '$mdDialog', 'toastr', 'seriesService'];
 
     Series: ISeries;
 
@@ -15,6 +15,7 @@ export class SeriesDetailsController {
         private $stateParams: ISeriesDetailsRouteParams,
         private $state: ng.ui.IStateService,
         private $uibModal: ng.ui.bootstrap.IModalService,
+        private $mdDialog: any,
         private toastr: ng.toastr.IToastrService,
         private seriesService: SeriesService) {
         seriesService.GetOne($stateParams.seriesId)
@@ -40,6 +41,19 @@ export class SeriesDetailsController {
             this.Series = result;
             this.toastr.success('File Successfully Linked!');
             this.$state.reload();
+        });
+    }
+
+    deleteSeries(ev: any){
+        var confirm = this.$mdDialog.confirm()
+          .title('Delete Series')
+          .textContent('Are you sure you wish to delete this series? This cannot be undone.')
+          .targetEvent(ev)
+          .ok('Delete!')
+          .cancel('Cancel');
+
+        this.$mdDialog.show(confirm).then(function() {
+            alert('Deleted!');
         });
     }
 

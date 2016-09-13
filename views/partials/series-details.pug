@@ -5,9 +5,11 @@
             .col-md-10 
                 label Dates: {{sr.Series.StartDate | date: 'MM/yyyy'}} - {{sr.Series.EndDate | date: 'MM/yyyy'}}
             .col-md-2
-                btn.btn.btn-primary.pull-right(ng-click='sr.linkSeries()')
-                    i.fa.fa-link.fa-fw
-                    span Link Series    
+                .btn-group.pull-right
+                    a.btn.btn-primary(ng-click='sr.linkSeries()')
+                        i.fa.fa-link.fa-fw
+                    a.btn.btn-danger(ng-click='sr.deleteSeries($event)')
+                        i.fa.fa-trash-o.fa-fw
 
     .row
         .col-sm-2

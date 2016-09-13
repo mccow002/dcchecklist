@@ -24,6 +24,8 @@ require('angular-ui-router');
 require('angular-cache');
 require('angular-touch');
 require('angular-tree-control');
+require('angular-material');
+require('angular-messages');
 
 export let app = module('checklist', [
     'ui.bootstrap',
@@ -31,7 +33,9 @@ export let app = module('checklist', [
     'ui.router',
     'angular-cache',
     'ngTouch',
-    'treeControl'
+    'treeControl',
+    'ngMaterial',
+    'ngMessages'
 ]);
 
 app.service('pubService', PubService);

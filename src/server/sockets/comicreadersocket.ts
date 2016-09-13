@@ -9,11 +9,11 @@ class ComicReaderSockets {
         console.log('Getting Page - ' + JSON.stringify(data));
 
         var reader = new ComicReader(data.filePath);
-        reader.GetImageAsBase64(data.page)
+        reader.GetImageBuffer(data.page)
             .then((pageData: PageData) => {
                 socket.emit('pageLoaded', {
                     page: pageData.Page,
-                    imageStr: pageData.ImageStr
+                    imageStr: pageData.ImageBuffer.toString('base64')
                 });  
             });
     }
