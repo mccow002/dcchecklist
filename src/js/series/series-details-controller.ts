@@ -18,7 +18,13 @@ export class SeriesDetailsController {
         private toastr: ng.toastr.IToastrService,
         private seriesService: SeriesService) {
         seriesService.GetOne($stateParams.seriesId)
-            .then((series: ISeries) => this.Series  = series);
+            .then((series: ISeries) => {
+                this.Series = series;
+                this.$state.go('seriesDetails.Issue', {
+                    seriesId: $stateParams.seriesId,
+                    issueId: series.Issues[0]._id
+                });
+            });
     }
 
     linkSeries() {

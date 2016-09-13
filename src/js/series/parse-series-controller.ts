@@ -12,6 +12,7 @@ class Issues {
         this.Last = last;
     }
 
+    Title: string;
     First: number;
     Last: number;
     Volume: number;
@@ -43,6 +44,7 @@ export class ParseSeriesController {
             let parser = new ParseSeries();
             let result = parser.ParseIssues(pub);
             this.issues = new Issues(result.First, result.Last);
+            this.issues.Title = pub.Title;
 
             let dateResult = parser.ParseDate(pub);
             console.log(JSON.stringify(dateResult));
@@ -78,7 +80,7 @@ export class ParseSeriesController {
     }
 
     parse() {
-        let series = new Series(this.pub.Title, this.issues.Volume);
+        let series = new Series(this.issues.Title, this.issues.Volume);
         series.StartDate = new Date(this.StartYear, this.Months.indexOf(this.StartMonth));
         series.EndDate = new Date(this.EndYear, this.Months.indexOf(this.EndMonth));
 

@@ -14,7 +14,9 @@ export class SeriesController {
         private seriesService: SeriesService,
         private toastr: ng.toastr.IToastrService) {
         seriesService.GetAll()
-            .then((series: ISeries[]) => this.Series = series);
+            .then((series: ISeries[]) => {
+                this.Series = series;
+            });
     }
 
     addSeries() {
