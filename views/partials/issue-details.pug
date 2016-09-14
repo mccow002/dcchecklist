@@ -1,46 +1,57 @@
 div
-    nav.navbar.navbar-default
+    //- nav.navbar.navbar-default
+    //-     .container-fluid
+    //-         .collapse.navbar-collapse
+    //-             ul.nav.navbar-nav
+    //-                 li
+    //-                     a(ng-click='id.linkIssue($event)')
+    //-                         i.fa.fa-link.fa-fw
+    //-                         span  Link
+    //-                 li(ng-if='id.Issue.FilePath !== undefined')
+    //-                     a(ng-click='id.getMetadata()') Load Metadata
+    //-             ul.nav.navbar-nav.navbar-right(ng-if='id.Issue.FilePath !== undefined')
+    //-                 li
+    //-                     p.navbar-btn
+    //-                         a.btn.btn-primary(ng-click='id.open()') Open
+
+    md-toolbar
+        .md-toolbar-tools
+            h2 
+                span {{id.Issue.Title}}
+            span(flex)
+            md-button.md-icon-button(ng-click='id.linkIssue($event)')
+                i.fa.fa-link.fa-fw
+            md-button.md-raised(ng-click='id.getMetadata()') Load Metadata
+            md-button(ng-click='id.open()') Open
+
+    md-content(flex, layout-padding)
         .container-fluid
-            .collapse.navbar-collapse
-                ul.nav.navbar-nav
-                    li
-                        a(ng-click='id.linkIssue($event)')
-                            i.fa.fa-link.fa-fw
-                            span  Link
-                    li(ng-if='id.Issue.FilePath !== undefined')
-                        a(ng-click='id.getMetadata()') Load Metadata
-                ul.nav.navbar-nav.navbar-right(ng-if='id.Issue.FilePath !== undefined')
-                    li
-                        p.navbar-btn
-                            a.btn.btn-primary(ng-click='id.open()') Open
-    .row
-        .col-md-6
             .row
-                .col-md-12
-                    h2 {{id.Issue.Title}}
-            .row
-                .col-md-12
-                    span.text-muted {{id.getMonth(id.Issue.Month)}} {{id.Issue.Year}}
-            .row.top-buffer
-                .col-md-12
-                    p {{id.Issue.Summary}}
-            .row
-                .col-md-12
-                    legend Characters
-                    div {{id.Issue.Characters}}
-            .row.top-buffer
-                .col-md-12
-                    legend Teams
-                    div {{id.Issue.Teams}}
-            .row.top-buffer
-                .col-md-12
-                    legend Locations
-                    div {{id.Issue.Locations}}
-            
-        .col-md-6
-            small {{id.Issue.FilePath}}
-            .well.text-center(ng-if='id.Issue.FilePath !== undefined')
-                img(ng-src='{{id.getCoverUrl()}}', style='height: 550px')
+                .col-md-6
+                    .row
+                        .col-md-12
+                            span.text-muted {{id.getMonth(id.Issue.Month)}} {{id.Issue.Year}}
+                    .row.top-buffer
+                        .col-md-12
+                            p {{id.Issue.Summary}}
+                    .row
+                        .col-md-12
+                            legend Characters
+                            div {{id.Issue.Characters}}
+                    .row.top-buffer
+                        .col-md-12
+                            legend Teams
+                            div {{id.Issue.Teams}}
+                    .row.top-buffer
+                        .col-md-12
+                            legend Locations
+                            div {{id.Issue.Locations}}
+                
+                .col-md-6
+                    small {{id.Issue.FilePath}}
+                    md-card(ng-if='id.Issue.FilePath !== undefined')
+                        md-card-content.text-center
+                            img(ng-src='{{id.getCoverUrl()}}', style='height: 550px')
 
     div.overlay#image-modal(ng-style='{"height": id.ViewerOpen ? "100%" : "0"}', 
         keypress-events, 

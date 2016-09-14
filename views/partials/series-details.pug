@@ -11,12 +11,31 @@
                     a.btn.btn-danger(ng-click='sr.deleteSeries($event)')
                         i.fa.fa-trash-o.fa-fw
 
-    .row
-        .col-sm-2
-            ul.nav.nav-pills.nav-stacked
-                li(ng-repeat='issue in sr.Series.Issues', ui-sref-active='active')
-                    a(ui-sref='.Issue({issueId: issue._id})') 
-                        span {{sr.Series.Name}} - {{issue.Number}}
-                        i.fa.fa-link.fa-fw.pull-right(ng-if='issue.FilePath !== undefined')
-        .col-sm-10
+    section(layout='row', flex)
+        md-sidenav.md-sidenav-left(md-component-id="left", md-is-locked-open="$mdMedia('gt-md')", md-whiteframe="4")
+           md-content
+                //- ul.nav.nav-pills.nav-stacked
+                //-     li(ng-repeat='issue in sr.Series.Issues', ui-sref-active='active', md-ink-ripple)
+                //-         a(ui-sref='.Issue({issueId: issue._id})') 
+                //-             span {{sr.Series.Name}} - {{issue.Number}}
+                //-             i.fa.fa-link.fa-fw.pull-right(ng-if='issue.FilePath !== undefined')
+                md-list
+                    div(ng-repeat='issue in sr.Series.Issues', ui-sref='.Issue({issueId: issue._id})')
+                        md-list-item(ng-click='sr.goToIssue()', ui-sref-active='active')
+                            p {{sr.Series.Name}} - {{issue.Number}}
+                            i.fa.fa-link.fa-fw.pull-right(ng-if='issue.FilePath !== undefined')
+
+        md-content(flex)
             ui-view
+
+    //- .row
+    //-     .col-sm-2
+    //-         md-list
+    //-             md-list-item(ng-repeat='issue in sr.Series.Issues')
+    //-         //- ul.nav.nav-pills.nav-stacked
+    //-         //-     li(ng-repeat='issue in sr.Series.Issues', ui-sref-active='active')
+    //-         //-         a(ui-sref='.Issue({issueId: issue._id})') 
+    //-         //-             span {{sr.Series.Name}} - {{issue.Number}}
+    //-         //-             i.fa.fa-link.fa-fw.pull-right(ng-if='issue.FilePath !== undefined')
+    //-     .col-sm-10
+    //-         ui-view

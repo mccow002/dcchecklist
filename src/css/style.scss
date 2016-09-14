@@ -143,3 +143,7 @@ h2 {
 .tree-node-override {
   background: none !important;
 }
+
+md-list-item.active {
+  background-color: rgba(158,158,158,0.2);
+}

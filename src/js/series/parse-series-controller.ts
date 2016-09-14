@@ -6,12 +6,6 @@ import { ISeries, Series } from '../series/series-model';
 import { SeriesService } from '../series/series-service';
 
 class Issues {
-
-    constructor(first: number, last: number) {
-        this.First = first;
-        this.Last = last;
-    }
-
     Title: string;
     First: number;
     Last: number;
@@ -19,9 +13,13 @@ class Issues {
     VolumeType: string;
 }
 
+interface IParseSeriesScope {
+    form: ng.IFormController
+}
+
 export class ParseSeriesController {
 
-    static $inject = ['$uibModalInstance', 'pub', 'seriesService', 'Months'];
+    static $inject = ['$scope', '$mdDialog', 'pub', 'seriesService', 'Months'];
 
     publication: IPublication;
     issues: Issues;
@@ -33,17 +31,20 @@ export class ParseSeriesController {
     EndYear: number;
 
     constructor(
-        private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, 
+        private $scope: IParseSeriesScope,
+        private $mdDialog: ng.material.IDialogService, 
         private pub: IPublication, 
         private seriesService: SeriesService,
         private Months: Array<string>) {
         this.publication = pub;
+        this.issues = new Issues();
 
         if(pub !== null)
         {
             let parser = new ParseSeries();
             let result = parser.ParseIssues(pub);
-            this.issues = new Issues(result.First, result.Last);
+            this.issues.First = result.First;
+            this.issues.Last = result.Last;
             this.issues.Title = pub.Title;
 
             let dateResult = parser.ParseDate(pub);
@@ -76,10 +77,14 @@ export class ParseSeriesController {
     }
 
     cancel() {
-        this.$uibModalInstance.dismiss('cancel');
+        this.$mdDialog.cancel();
     }
 
     parse() {
+        if(!this.$scope.form.$valid){
+            return;
+        }
+
         let series = new Series(this.issues.Title, this.issues.Volume);
         series.StartDate = new Date(this.StartYear, this.Months.indexOf(this.StartMonth));
         series.EndDate = new Date(this.EndYear, this.Months.indexOf(this.EndMonth));
@@ -94,7 +99,7 @@ export class ParseSeriesController {
         }
 
         this.seriesService.Create(series)
-            .then((result) => this.$uibModalInstance.close(series));
+            .then((result) => this.$mdDialog.hide(series));
     }
 
 }

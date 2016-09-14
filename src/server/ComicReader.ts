@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs'; 
 import * as xpath from 'xpath';
 import * as colors from 'colors';
+import * as _ from 'lodash';
 import { DOMParser } from 'xmldom';
 import { IIssue } from './models/issue'
 var Unrar = require('unrar');
@@ -21,7 +22,7 @@ export class ComicReader {
         var rf = new Unrar(this.path);
         rf.list((err: any, entries: any) => {
             var regex = () => /[0-9]{2}/g;
-            var pages = new Array<any>();
+            var pages = new Array<string>();
             
             for(let i = 0; i < entries.length; i++) {
                 if(!regex().test(entries[i].name))
@@ -29,8 +30,8 @@ export class ComicReader {
                 
                 pages.push(entries[i].name);
             }
-
-            d.resolve(pages);
+            
+            d.resolve(_.sortBy(pages));
         });
 
         return d.promise;
@@ -67,6 +68,7 @@ export class ComicReader {
         var dbXml = fs.readFileSync(comicDb, { encoding: 'UTF-8' });
         var doc = new DOMParser().parseFromString(dbXml);
 
+        console.log(xpath.select('/ComicDatabase/Books/Book[@File="' + this.path + '"]', doc).toString());
         var book = (field: string) => xpath.select('string(/ComicDatabase/Books/Book[@File="' + this.path + '"]/' + field + ')', doc);
                 
         issue.Title = book('Title');
