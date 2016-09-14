@@ -7,15 +7,17 @@ interface ISeriesDetailsRouteParams extends ng.ui.IStateParamsService {
 
 export class SeriesDetailsController {
 
-    static $inject = ['$stateParams', '$state', '$uibModal', '$mdDialog', 'toastr', 'seriesService'];
+    static $inject = ['$stateParams', '$state', '$uibModal', '$mdDialog', '$window', 'toastr', 'seriesService'];
 
     Series: ISeries;
+    route: string;
 
     constructor(
         private $stateParams: ISeriesDetailsRouteParams,
         private $state: ng.ui.IStateService,
         private $uibModal: ng.ui.bootstrap.IModalService,
         private $mdDialog: any,
+        private $window: ng.IWindowService,
         private toastr: ng.toastr.IToastrService,
         private seriesService: SeriesService) {
         seriesService.GetOne($stateParams.seriesId)
@@ -26,6 +28,19 @@ export class SeriesDetailsController {
                     issueId: series.Issues[0]._id
                 });
             });
+
+        this.route = JSON.stringify($window.location.hash);
+    }
+
+    getActive(issueId: string) {
+        let issueUrl = '/series/' + this.Series._id + '/' + issueId;
+        let url = this.$window.location.hash.substring(1, this.$window.location.hash.length);
+
+        if(issueUrl === url) {
+            return 'nav-active';
+        }
+
+        return '';
     }
 
     linkSeries() {
@@ -52,8 +67,11 @@ export class SeriesDetailsController {
           .ok('Delete!')
           .cancel('Cancel');
 
+        var self = this;
         this.$mdDialog.show(confirm).then(function() {
-            alert('Deleted!');
+            console.log('DELETING!');
+            self.seriesService.DeleteSeries(self.Series._id)
+                .then(() => self.$state.go('series'));
         });
     }
 

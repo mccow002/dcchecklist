@@ -21,8 +21,10 @@ div
             span(flex)
             md-button.md-icon-button(ng-click='id.linkIssue($event)')
                 i.fa.fa-link.fa-fw
-            md-button.md-raised(ng-click='id.getMetadata()') Load Metadata
-            md-button(ng-click='id.open()') Open
+            md-button.md-raised.text-center(ng-click='id.getMetadata()', style='width: 130px;') 
+                span(ng-if='!id.LoadingMetadata') Load Metadata
+                md-progress-circular(md-mode='indeterminate', md-diameter='25px', style='margin: auto', ng-if='id.LoadingMetadata')
+            md-button(ng-click='id.open($event)') Open
 
     md-content(flex, layout-padding)
         .container-fluid
@@ -52,20 +54,3 @@ div
                     md-card(ng-if='id.Issue.FilePath !== undefined')
                         md-card-content.text-center
                             img(ng-src='{{id.getCoverUrl()}}', style='height: 550px')
-
-    div.overlay#image-modal(ng-style='{"height": id.ViewerOpen ? "100%" : "0"}', 
-        keypress-events, 
-        on-keydown='id.handleKeydown($event)', 
-        ng-swipe-left='id.next()', 
-        ng-swipe-right='id.previous()')
-        a.closebtn(ng-click='id.closeViewer()') &times;
-        a.left-arrow(ng-click='id.previous()')
-            i.fa.fa-arrow-left
-        a.right-arrow(ng-click='id.next()')
-            i.fa.fa-arrow-right
-        .overlay-content(window-resize, on-resize='id.onResize()')
-            .progress.page-loader(ng-if='id.PageLoading === true')
-                div.progress-bar.progress-bar-info.progress-bar-striped.active(style='width:100%')
-            img(ng-src='data:image/jpeg;base64, {{id.ViewerImage}}', ng-style='{"height": id.ViewerHeight}')
-            .progress.page-progress
-                div.progress-bar.progress-bar-success(ng-style='{"width": id.Progress}') {{id.CurrentPage + 1}}/{{id.IssuePages.length}}

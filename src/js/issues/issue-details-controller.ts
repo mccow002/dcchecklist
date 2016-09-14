@@ -1,5 +1,6 @@
 import { IIssue } from './issue-model';
 import { IssueService } from './issue-service';
+import { ReaderPresenter } from './reader-controller';
 
 interface IIssueRouteParams extends ng.ui.IStateParamsService {
     issueId: string;
@@ -7,46 +8,25 @@ interface IIssueRouteParams extends ng.ui.IStateParamsService {
 
 export class IssueDetailsController {
 
-    static $inject = ['$scope', '$stateParams', '$uibModal', '$window', '$rootScope', '$state', 'toastr', 'issueService', 'Months'];
+    static $inject = ['$scope', '$stateParams', '$mdDialog', '$window', '$rootScope', '$state', 'toastr', 'issueService', 'Months', 'readerPresenter'];
 
     Issue: IIssue;
-    IssuePages: string[];
-    CurrentPage: number;
-    ViewerImage: string;
-    ViewerOpen: boolean;
-    ViewerHeight: string;
-    PageLoading: boolean;
-    Progress: string;
+    LoadingMetadata: boolean = false;
 
     constructor(
         private $scope: ng.IScope,
         private $stateParams: IIssueRouteParams,
-        private $uibModal: ng.ui.bootstrap.IModalService,
+        private $mdDialog: ng.material.IDialogService,
         private $window: ng.IWindowService,
         private $rootScope: ng.IRootScopeService,
         private $state: ng.ui.IStateService,
         private toastr: ng.toastr.IToastrService,
         private issueService: IssueService,
-        private Months: Array<string>
+        private Months: Array<string>,
+        private readerPresenter: ReaderPresenter
     ) {
-        this.CurrentPage = 0;
-        this.ViewerOpen = false;
-        this.ViewerHeight = ($window.innerHeight - 15) + 'px';
-        this.PageLoading = true;
-
         issueService.GetIssue($stateParams.issueId)
             .then((result: IIssue) => this.Issue = result);
-        
-        this.issueService.RegisterPagesLoaded((args: any) => {
-            this.IssuePages = args;
-            this.getPage();
-        });
-
-        this.issueService.RegisterPageLoaded((args: any) => {
-            this.Progress = this.calcWidth();
-            this.PageLoading = false;
-            this.ViewerImage = args;
-        });
     }
 
     getCoverUrl() {
@@ -55,43 +35,42 @@ export class IssueDetailsController {
         }
     }
 
-    getPage() {
-        this.PageLoading = true;
-        this.issueService.GetPage(
-            this.Issue.FilePath,
-            this.IssuePages[this.CurrentPage]);
-    }
-
-    calcWidth() {
-        let progress = (((this.CurrentPage + 1) / this.IssuePages.length) * 100);
-        console.log(this.CurrentPage + ' / ' + this.IssuePages.length + ' * 100 = ' + progress);
-        return progress + '%';
-    }
-
-    linkIssue($event: ng.IAngularEvent) {
+    linkIssue($event: any) {
         $event.stopPropagation();
-        
-        var mi = this.$uibModal.open({
-            controller: 'linkIssueCtrl as li',
-            templateUrl: '/dist/views/link-issue.html',
-            resolve: {
-                issue: () => this.Issue
-            }
-        });
 
-        mi.result.then((result: IIssue) => {
-            this.Issue = result;
-            this.toastr.success('File Successfully Linked!');
-        });
+        var linkPrompt = this.$mdDialog.prompt()
+            .title('Link Issue')
+            .placeholder('File Path')
+            .ariaLabel('File Path')
+            .initialValue(this.Issue.FilePath)
+            .targetEvent($event)
+            .ok('Link')
+            .cancel('Cancel')
+            .parent(angular.element(document.body));
+
+        this.$mdDialog.show(linkPrompt)
+            .then((result) => {
+                console.log(result);
+                this.Issue.FilePath = result;
+                this.issueService.LinkToFile(this.Issue)
+                    .then((issue: IIssue) => {
+                        this.toastr.success('File Successfully Linked!');
+                    })
+            });
     }
 
     getMetadata() {
+        this.LoadingMetadata = true;
         this.issueService.GetMetadata(this.Issue)
             .then((result) => {
                 this.Issue = result;
                 console.log(this.Issue);
                 this.toastr.success('Metadata loaded!');
-                this.$state.reload();
+                this.LoadingMetadata = false;
+                //this.$state.reload();
+            }, () => {
+                this.LoadingMetadata = false;
+                this.toastr.error('Unable to load metadata!');
             })
     }
 
@@ -99,70 +78,9 @@ export class IssueDetailsController {
         return this.Months[month - 1];
     }
 
-    open() {
-        this.issueService.Open(this.Issue);
-        this.ViewerOpen = true;
-    }
-
-    closeViewer() {
-        console.log('closing viewer...');
-        this.ViewerOpen = false;
-    }
-
-    next() {
-        if(this.CurrentPage === this.IssuePages.length - 1) {
-            return;
-        }
-
-        this.CurrentPage = this.CurrentPage + 1;
-        this.getPage();
-    }
-
-    previous() {
-        if(this.CurrentPage === 0) {
-            return;
-        }
-        
-        this.CurrentPage = this.CurrentPage - 1;
-        this.getPage();
-    }
-
-    handleKeydown(key: number) {
-        if(key === 39) {
-            this.$scope.$apply(() => this.next());
-        } else if (key === 37) {
-            this.$scope.$apply(() => this.previous());
-        } else if (key === 27) {
-            this.$scope.$apply(() => this.closeViewer());
-        }
-    }
-
-    onResize() {
-        this.$scope.$apply(() => {
-            this.ViewerHeight = (this.$window.innerHeight - 15) + 'px';
-        });
-    }
-}
-
-export class LinkIssueController {
-
-    static $inject = ['$uibModalInstance', 'issueService', 'issue'];
-
-    Issue: IIssue;
-
-    constructor(
-        private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance,
-        private issueService: IssueService,
-        private issue: IIssue) {
-            this.Issue = issue;
-        }
-
-    cancel() {
-        this.$uibModalInstance.dismiss('cancel');
-    }
-
-    link() {
-        this.issueService.LinkToFile(this.Issue);
-        this.$uibModalInstance.close(this.Issue);
+    open(ev: any) {
+        this.readerPresenter.Open(this.Issue, ev);
+        // this.issueService.Open(this.Issue);
+        // this.ViewerOpen = true;
     }
 }

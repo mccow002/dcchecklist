@@ -69,7 +69,7 @@ export class SeriesService {
         return q.promise;
     }
 
-    public LinkToFolder(series: ISeries, folderPath: string, filePattern: string) {
+    public LinkToFolder(series: ISeries, folderPath: string, filePattern: string): ng.IPromise<ISeries> {
         let q = this.$q.defer();
         let req = this.$http.post('/seriesapi/linkToFolder/', {
             Series: series,
@@ -79,6 +79,21 @@ export class SeriesService {
 
         req.success((series: ng.IHttpPromiseCallback<ISeries>) => {
             q.resolve(series);
+        });
+
+        req.error(() => {
+            q.reject();
+        });
+
+        return q.promise;
+    }
+
+    public DeleteSeries(seriesId: string) {
+        let q = this.$q.defer();
+        let req = this.$http.delete('/seriesapi/' + seriesId);
+
+        req.success(() => {
+            q.resolve();
         });
 
         req.error(() => {

@@ -1,0 +1,17 @@
+md-dialog.reader( 
+    keypress-events, 
+    on-keydown='rc.handleKeydown($event)', 
+    ng-swipe-left='rc.next()', 
+    ng-swipe-right='rc.previous()')
+    md-dialog-content
+        a.closebtn(ng-click='rc.closeViewer()') &times;
+        a.left-arrow(ng-click='rc.previous()')
+            i.fa.fa-arrow-left
+        a.right-arrow(ng-click='rc.next()')
+            i.fa.fa-arrow-right
+        div(window-resize, on-resize='rc.onResize()')
+            .progress.page-loader(ng-if='rc.PageLoading === true')
+                div.progress-bar.progress-bar-info.progress-bar-striped.active(style='width:100%')
+            img(ng-src='data:image/jpeg;base64, {{rc.ViewerImage}}', ng-style='{"height": rc.ViewerHeight}')
+            .progress.page-progress
+                div.progress-bar.progress-bar-success(ng-style='{"width": rc.Progress}') {{rc.CurrentPage + 1}}/{{rc.IssuePages.length}}

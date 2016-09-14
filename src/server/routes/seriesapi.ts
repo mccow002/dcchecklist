@@ -145,6 +145,14 @@ class SeriesApi {
         // }
     }
 
+    public DeleteSeries(req: express.Request, res: express.Response) {
+        var id = req.params.id;
+
+        Series.findByIdAndRemove(id, (err: mongoose.Error) => {
+            res.json(200);
+        })
+    }
+
 }
 
 interface ILinkToFolderReq {
@@ -160,5 +168,6 @@ router.get('/', seriesApi.GetAll);
 router.get('/:id', seriesApi.GetOne);
 router.post('/getfilesindir/', seriesApi.GetFilesInDir);
 router.post('/linkToFolder', seriesApi.LinkToFolder);
+router.delete('/:id', seriesApi.DeleteSeries);
 
 module.exports = router;

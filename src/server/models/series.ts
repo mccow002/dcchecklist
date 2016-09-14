@@ -27,4 +27,8 @@ export const SeriesSchema = new mongoose.Schema({
 });
 SeriesSchema.index({'$**': 'text'});
 
+SeriesSchema.pre('remove', (next) => {
+    mongoose.model('issue').remove({_id: this._id}, next);
+})
+
 export const Series = mongoose.model<ISeries>('series', SeriesSchema, 'dccollection');

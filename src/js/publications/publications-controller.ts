@@ -2,6 +2,7 @@ import { app } from '../checklist-app';
 import { PubService } from './publications-service';
 import { IPublication } from './publication-model';
 import { ISeries } from '../series/series-model';
+import { ParseSeriesPresenter } from '../series/parse-series-controller';
 
 class Search {
     SearchText: string
@@ -13,7 +14,7 @@ interface IPublisherParams extends ng.ui.IStateParamsService {
 
 export class PublicationsController {
 
-    static $inject = ['$rootScope', 'pubService', '$uibModal', '$stateParams', '$state', 'toastr'];
+    static $inject = ['$rootScope', 'pubService', '$uibModal', '$stateParams', '$state', 'toastr', 'parseSeriesPresenter'];
 
     Publications: Array<IPublication>;
     Indexes: Array<string>;
@@ -27,7 +28,8 @@ export class PublicationsController {
         private modal: ng.ui.bootstrap.IModalService,
         private $stateParams: IPublisherParams,
         private $state: ng.ui.IStateService,
-        private toastr: ng.toastr.IToastrService) {
+        private toastr: ng.toastr.IToastrService,
+        private parseSeriesPresenter: ParseSeriesPresenter) {
         
         this.Indexes = new Array<string>();
         this.Index = 0;
@@ -101,18 +103,11 @@ export class PublicationsController {
         this.Publications.splice(index, 1);
     }
 
-    ParseSeries(pub: IPublication) {
-        let mi = this.modal.open({
-            controller: 'parseSeriesCtrl as ps',
-            templateUrl: '/dist/views/parseSeries.html',
-            resolve: {
-                pub: () => pub
-            }
-        });
-
-        mi.result.then((series: ISeries) => {
-            this.toastr.success('Series parsed!');
-            this.$state.go('series');
-        });
+    ParseSeries(pub: IPublication, ev: any) {
+        this.parseSeriesPresenter.Open(pub, ev)
+            .then((series: ISeries) => {
+                this.toastr.success('Series parsed!');
+                this.$state.go('series');
+            });
     }
 }

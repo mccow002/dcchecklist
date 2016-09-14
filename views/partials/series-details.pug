@@ -1,14 +1,15 @@
 .div(ng-controller='seriesDetailsCtrl as sr')
-    .well
-        h2 {{sr.Series.Name}}
-        .row
-            .col-md-10 
-                label Dates: {{sr.Series.StartDate | date: 'MM/yyyy'}} - {{sr.Series.EndDate | date: 'MM/yyyy'}}
-            .col-md-2
-                .btn-group.pull-right
-                    a.btn.btn-primary(ng-click='sr.linkSeries()')
+    md-content
+        md-toolbar.md-hue-2
+            .md-toolbar-tools
+                div(layout='column')
+                    .md-headline(flex) {{sr.Series.Name}}
+                    .md-subhead(flex) Dates: {{sr.Series.StartDate | date: 'MM/yyyy'}} - {{sr.Series.EndDate | date: 'MM/yyyy'}}
+                span(flex)
+                .btn-group
+                    a.btn.btn-primary(ng-click='sr.linkSeries()', md-ink-ripple)
                         i.fa.fa-link.fa-fw
-                    a.btn.btn-danger(ng-click='sr.deleteSeries($event)')
+                    a.btn.btn-danger(ng-click='sr.deleteSeries($event)', md-ink-ripple)
                         i.fa.fa-trash-o.fa-fw
 
     section(layout='row', flex)
@@ -20,10 +21,9 @@
                 //-             span {{sr.Series.Name}} - {{issue.Number}}
                 //-             i.fa.fa-link.fa-fw.pull-right(ng-if='issue.FilePath !== undefined')
                 md-list
-                    div(ng-repeat='issue in sr.Series.Issues', ui-sref='.Issue({issueId: issue._id})')
-                        md-list-item(ng-click='sr.goToIssue()', ui-sref-active='active')
-                            p {{sr.Series.Name}} - {{issue.Number}}
-                            i.fa.fa-link.fa-fw.pull-right(ng-if='issue.FilePath !== undefined')
+                    md-list-item(ng-click='sr.goToIssue()', ng-class='sr.getActive(issue._id)', ng-repeat='issue in sr.Series.Issues', ui-sref='.Issue({issueId: issue._id})')
+                        p {{sr.Series.Name}} - {{issue.Number}}
+                        i.fa.fa-link.fa-fw.pull-right(ng-if='issue.FilePath !== undefined')
 
         md-content(flex)
             ui-view

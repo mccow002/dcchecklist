@@ -1,24 +1,24 @@
 import { IIssue } from '../issues/issue-model';
 
 export interface ISeries {
-    _id: String,
-    _type: String,
-    Name: String,
+    _id: string,
+    _type: string,
+    Name: string,
     Volume: Number,
     NumberOfIssues: Number,
-    SeriesType: String,
+    SeriesType: string,
     StartDate: Date,
     EndDate: Date,
     Issues: Array<IIssue>
 }
 
 export class Series implements ISeries {
-    _id: String;
-    _type: String;
-    Name: String;
+    _id: string;
+    _type: string;
+    Name: string;
     Volume: Number;
     NumberOfIssues: Number;
-    SeriesType: String;
+    SeriesType: string;
     StartDate: Date;
     EndDate: Date;
     Issues: Array<IIssue>;

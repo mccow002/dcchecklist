@@ -17,6 +17,28 @@ interface IParseSeriesScope {
     form: ng.IFormController
 }
 
+export class ParseSeriesPresenter {
+    static $inject = ['$mdDialog'];
+
+    constructor(private $mdDialog: ng.material.IDialogService) {
+
+    }
+
+    public Open(publication: IPublication, ev: any): ng.IPromise<ISeries> {
+        return this.$mdDialog.show({
+            controller: ParseSeriesController,
+            controllerAs: 'ps',
+            templateUrl: '/dist/views/parseSeries.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose: true,
+            locals: {
+                pub: publication
+            }
+        });
+    }
+}
+
 export class ParseSeriesController {
 
     static $inject = ['$scope', '$mdDialog', 'pub', 'seriesService', 'Months'];
