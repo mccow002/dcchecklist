@@ -1,19 +1,25 @@
 .div(ng-controller='seriesDetailsCtrl as sr')
-    md-content
+    md-content#series-header
         md-toolbar.md-hue-2
             .md-toolbar-tools
+                md-button.md-fab.md-primary.md-mini(hide-gt-sm, ng-click='sr.toggleIssues()')
+                    i.fa.fa-bars
                 div(layout='column')
                     .md-headline(flex) {{sr.Series.Name}}
                     .md-subhead(flex) Dates: {{sr.Series.StartDate | date: 'MM/yyyy'}} - {{sr.Series.EndDate | date: 'MM/yyyy'}}
                 span(flex)
-                .btn-group
-                    a.btn.btn-primary(ng-click='sr.linkSeries()', md-ink-ripple)
-                        i.fa.fa-link.fa-fw
-                    a.btn.btn-danger(ng-click='sr.deleteSeries($event)', md-ink-ripple)
-                        i.fa.fa-trash-o.fa-fw
+                //- .btn-group
+                //-     a.btn.btn-primary(ng-click='sr.linkSeries()', md-ink-ripple)
+                //-         i.fa.fa-link.fa-fw
+                //-     a.btn.btn-danger(ng-click='sr.deleteSeries($event)', md-ink-ripple)
+                //-         i.fa.fa-trash-o.fa-fw
+                md-button.md-fab.md-raised.md-mini.md-primary(ng-click='sr.linkSeries()')
+                    i.fa.fa-link.fa-fw
+                md-button.md-fab.md-raised.md-mini.md-warn(ng-click='sr.deleteSeries($event)')
+                    i.fa.fa-trash-o.fa-fw
 
     section(layout='row', flex)
-        md-sidenav.md-sidenav-left(md-component-id="left", md-is-locked-open="$mdMedia('gt-md')", md-whiteframe="4")
+        md-sidenav.md-sidenav-left(md-component-id="left", md-is-locked-open="$mdMedia('gt-sm')", md-whiteframe="4", style='overflow: auto', remaining-height)
            md-content
                 //- ul.nav.nav-pills.nav-stacked
                 //-     li(ng-repeat='issue in sr.Series.Issues', ui-sref-active='active', md-ink-ripple)
@@ -21,7 +27,7 @@
                 //-             span {{sr.Series.Name}} - {{issue.Number}}
                 //-             i.fa.fa-link.fa-fw.pull-right(ng-if='issue.FilePath !== undefined')
                 md-list
-                    md-list-item(ng-click='sr.goToIssue()', ng-class='sr.getActive(issue._id)', ng-repeat='issue in sr.Series.Issues', ui-sref='seriesDetails.Issue({issueId: issue._id})')
+                    md-list-item(ng-click='sr.goToIssue(issue._id)', ng-class='sr.getActive(issue._id)', ng-repeat='issue in sr.Series.Issues')
                         p {{sr.Series.Name}} - {{issue.Number}}
                         i.fa.fa-link.fa-fw.pull-right(ng-if='issue.FilePath !== undefined')
 

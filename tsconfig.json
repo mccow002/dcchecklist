@@ -5,8 +5,7 @@
         "removeComments": true,
         "preserveConstEnums": true,
         "sourceMap": true,
-        "rootDir": "src/server",
-        "sourceRoot": "src/server"
+        "rootDir": "src/server"
     },
     "exclude": [
         "node_modules"

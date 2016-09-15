@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 import { Issue, IIssue } from '../models/issue';
-import { ComicReader } from '../ComicReader';
+import { ComicReader } from '../services/comic-reader/ComicReader';
 import * as colors from 'colors';
 
 class IssuesApi {
@@ -25,7 +25,7 @@ class IssuesApi {
 
     public LoadMetadata(req: express.Request, res: express.Response) {
         let issue = <IIssue>req.body;
-        var reader = new ComicReader(issue.FilePath);
+        var reader = new ComicReader(issue.FilePath.toString());
         issue = reader.GetMetadataFromComicRack(issue);
         
         Issue.findByIdAndUpdate(issue._id, issue, 

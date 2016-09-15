@@ -44,7 +44,6 @@ class SeriesApi {
 
         Issue.insertMany(issues, (err: mongoose.Error, results: IIssue[]) => {
             if(err) throw err;
-            console.log(results);
 
             let seriesObj = new Series();
             seriesObj._type = "series";
@@ -160,9 +159,14 @@ class SeriesApi {
     public DeleteSeries(req: express.Request, res: express.Response) {
         var id = req.params.id;
 
-        Series.findByIdAndRemove(id, (err: mongoose.Error) => {
+        Series.findById(id, (err: mongoose.Error, result: ISeries) => {
+            result.remove();
             res.json(200);
         })
+
+        // Series.findByIdAndRemove(id, (err: mongoose.Error) => {
+        //     res.json(200);
+        // })
     }
 
 }

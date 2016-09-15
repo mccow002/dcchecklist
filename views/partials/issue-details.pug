@@ -1,19 +1,4 @@
 div
-    //- nav.navbar.navbar-default
-    //-     .container-fluid
-    //-         .collapse.navbar-collapse
-    //-             ul.nav.navbar-nav
-    //-                 li
-    //-                     a(ng-click='id.linkIssue($event)')
-    //-                         i.fa.fa-link.fa-fw
-    //-                         span  Link
-    //-                 li(ng-if='id.Issue.FilePath !== undefined')
-    //-                     a(ng-click='id.getMetadata()') Load Metadata
-    //-             ul.nav.navbar-nav.navbar-right(ng-if='id.Issue.FilePath !== undefined')
-    //-                 li
-    //-                     p.navbar-btn
-    //-                         a.btn.btn-primary(ng-click='id.open()') Open
-
     md-toolbar
         .md-toolbar-tools
             h2 
@@ -22,10 +7,10 @@ div
             span(flex)
             md-button.md-icon-button(ng-click='id.linkIssue($event)')
                 i.fa.fa-link.fa-fw
-            md-button.md-raised.text-center(ng-click='id.getMetadata()', style='width: 130px;') 
+            md-button.md-raised.text-center(ng-click='id.getMetadata()', style='width: 130px;', ng-if='id.Issue.FilePath') 
                 span(ng-if='!id.LoadingMetadata') Load Metadata
                 md-progress-circular(md-mode='indeterminate', md-diameter='25px', style='margin: auto', ng-if='id.LoadingMetadata')
-            md-button(ng-click='id.open($event)') Open
+            md-button(ng-click='id.open($event)', ng-if='id.Issue.FilePath') Open
 
     md-content(flex, layout-padding)
         .container-fluid

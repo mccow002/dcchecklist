@@ -19,8 +19,7 @@ html(ng-app='checklist')
     script(src='/socket.io/socket.io.js')
     script(src='/dist/js/bundle.js')
   body
-    .container-fluid
-      .header.clearfix
+      .header.clearfix#header
         nav
           .nav.nav-pills.pull-right
             li(ui-sref-active='active')

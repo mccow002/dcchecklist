@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { IssueSchema, IIssue } from './issue';
+import { IssueSchema, IIssue, Issue } from './issue';
 
 export interface ISeries extends mongoose.Document {
     _type: String,
@@ -28,7 +28,8 @@ export const SeriesSchema = new mongoose.Schema({
 SeriesSchema.index({'$**': 'text'});
 
 SeriesSchema.pre('remove', (next) => {
-    mongoose.model('issue').remove({_id: this._id}, next);
+    console.log(this);
+    Issue.remove({_id: this._id}, next);
 })
 
 export const Series = mongoose.model<ISeries>('series', SeriesSchema, 'dccollection');

@@ -1,4 +1,5 @@
-import { ComicReader, PageData } from '../ComicReader';
+import { ComicReader } from '../services/comic-reader/ComicReader';
+import { PageData } from '../services/comic-reader/PageData';
 import * as q from 'q';
 import * as path from 'path';
 var streamTo = require('stream-to-array');

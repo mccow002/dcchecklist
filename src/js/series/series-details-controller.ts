@@ -7,7 +7,7 @@ interface ISeriesDetailsRouteParams extends ng.ui.IStateParamsService {
 
 export class SeriesDetailsController {
 
-    static $inject = ['$stateParams', '$state', '$uibModal', '$mdDialog', '$window', 'toastr', 'seriesService'];
+    static $inject = ['$stateParams', '$state', '$uibModal', '$mdDialog', '$mdSidenav', '$window', 'toastr', 'seriesService'];
 
     Series: ISeries;
     route: string;
@@ -16,7 +16,8 @@ export class SeriesDetailsController {
         private $stateParams: ISeriesDetailsRouteParams,
         private $state: ng.ui.IStateService,
         private $uibModal: ng.ui.bootstrap.IModalService,
-        private $mdDialog: any,
+        private $mdDialog: ng.material.IDialogService,
+        private $mdSidenav: ng.material.ISidenavService,
         private $window: ng.IWindowService,
         private toastr: ng.toastr.IToastrService,
         private seriesService: SeriesService) {
@@ -30,6 +31,16 @@ export class SeriesDetailsController {
             });
 
         this.route = JSON.stringify($window.location.hash);
+    }
+
+    goToIssue(issueId: string) {
+        this.$state.go('seriesDetails.Issue', {issueId: issueId})
+            .then(() => {
+                let sideNav = this.$mdSidenav('left');
+                if(sideNav.isOpen() && !sideNav.isLockedOpen()) {
+                    sideNav.close();
+                }
+            })
     }
 
     getActive(issueId: string) {
@@ -75,6 +86,10 @@ export class SeriesDetailsController {
         });
     }
 
+    toggleIssues() {
+        this.$mdSidenav('left')
+            .toggle();
+    }
 }
 
 export class LinkSeriesController {

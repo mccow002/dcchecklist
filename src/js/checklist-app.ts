@@ -20,6 +20,7 @@ import * as http from './http-interceptor-factory';
 import * as keypress from './directives/keypress';
 import * as resize from './directives/window-resize';
 import * as spinner from './directives/spinner-on-load';
+import * as remainingHeight from './directives/remaining-height';
 import { AppConfig } from './app-config';
 
 require('angular-bootstrap-npm');
@@ -55,6 +56,7 @@ app.factory('httpInterceptor', http.Http.Interceptor);
 app.directive('keypressEvents', keypress.Directives.Keypress);
 app.directive('windowResize', resize.Directives.WindowResize);
 app.directive('spinnerOnLoad', spinner.Directives.SpinnerOnLoad);
+app.directive('remainingHeight', remainingHeight.Directives.RemainingHeight);
 
 app.controller('rootCtrl', RootController);
 app.controller('publicationsCtrl', PublicationsController);
