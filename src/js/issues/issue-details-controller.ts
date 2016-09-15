@@ -4,6 +4,7 @@ import { ReaderPresenter } from './reader-controller';
 
 interface IIssueRouteParams extends ng.ui.IStateParamsService {
     issueId: string;
+    seriesName: string;
 }
 
 export class IssueDetailsController {

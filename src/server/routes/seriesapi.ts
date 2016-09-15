@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import * as path from 'path';
 import { Series, ISeries } from '../models/series';
 import { Issue, IIssue } from '../models/issue';
-import { Config } from '../config'
+import { Config } from '../config';
 
 class SeriesApi {
 
@@ -101,40 +101,52 @@ class SeriesApi {
         var prefix = info.FilePattern.substring(0, numIndex).trim();
 
         var scanReg = () => /^(.*?)[0-9]{3}/;
+        var issueNumReg = () => /^[0-9]{3}/;
         fs.readdir(info.FolderPath, 
             (err: NodeJS.ErrnoException, files: string[]) => {
-                var filteredFiles = _.filter(files, (file) => {
+                let filteredFiles = new Array<any>();
+                files.forEach((file) => {
                     var result  = scanReg().exec(file);
+
                     var fileStart = result[1].trim();
                     if(fileStart === prefix) {
-                        return file;
+                        var startStrippedOff = file.substring(result[1].length, file.length);
+                        var num = issueNumReg().exec(startStrippedOff);
+
+                        filteredFiles.push({
+                            fileName: file,
+                            fileNumber: Number(num[0])   
+                        });
                     }
                 });
-
-                var issues = _.orderBy(info.Series.Issues, ['IssueNumber']);
+                
+                var issues = info.Series.Issues;
                 for(let i = 0; i < issues.length; i++) {
-                    issues[i].FilePath = path.join(info.FolderPath, filteredFiles[i]);
+                    var match = _.find(filteredFiles, (f: any) => f.fileNumber == issues[i].Number);
+                    if(match === undefined) {
+                        continue;
+                    }
+                    issues[i].FilePath = path.join(info.FolderPath, match.fileName);
                 }
-                console.log(issues);
 
-                // var promises = new Array<q.IPromise<IIssue>>();
-                // issues.forEach(i => {
-                //     var d = q.defer();
-                //     Issue.findByIdAndUpdate(i._id, i, (err, issue) => {
-                //         d.resolve();
-                //     });
-                //     promises.push(d.promise);
-                // });
+                var promises = new Array<q.IPromise<IIssue>>();
+                issues.forEach(i => {
+                    var d = q.defer();
+                    Issue.findByIdAndUpdate(i._id, i, (err, issue) => {
+                        d.resolve();
+                    });
+                    promises.push(d.promise);
+                });
 
-                // q.allSettled(promises)
-                //     .then(() => {
-                //         Series.findOne({ _id: info.Series._id })
-                //             .populate('Issues')
-                //             .exec((err: mongoose.Error, result: ISeries) => {
-                //                 if(err) throw err;
-                //                 res.json(result);
-                //             });
-                //     });
+                q.allSettled(promises)
+                    .then(() => {
+                        Series.findOne({ _id: info.Series._id })
+                            .populate('Issues')
+                            .exec((err: mongoose.Error, result: ISeries) => {
+                                if(err) throw err;
+                                res.json(result);
+                            });
+                    });
             });
 
         // var result  = scanReg().exec(files[i]);

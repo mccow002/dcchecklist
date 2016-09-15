@@ -17,7 +17,8 @@ div
     md-toolbar
         .md-toolbar-tools
             h2 
-                span {{id.Issue.Title}}
+                span(ng-if='!id.Issue.Title') {{$parent.sr.Series.Name}} - {{id.Issue.Number}}
+                span(ng-if='id.Issue.Title') {{id.Issue.Title}}
             span(flex)
             md-button.md-icon-button(ng-click='id.linkIssue($event)')
                 i.fa.fa-link.fa-fw
@@ -28,23 +29,26 @@ div
 
     md-content(flex, layout-padding)
         .container-fluid
+            .row(ng-if='id.Issue.FilePath === undefined')
+                .col-md-12
+                    h3 To begin, link to a file
             .row
                 .col-md-6
                     .row
                         .col-md-12
                             span.text-muted {{id.getMonth(id.Issue.Month)}} {{id.Issue.Year}}
-                    .row.top-buffer
+                    .row.top-buffer(ng-if='id.Issue.Summary !== undefined')
                         .col-md-12
                             p {{id.Issue.Summary}}
-                    .row
+                    .row(ng-if='id.Issue.Characters !== undefined')
                         .col-md-12
                             legend Characters
                             div {{id.Issue.Characters}}
-                    .row.top-buffer
+                    .row.top-buffer(ng-if='id.Issue.Teams !== undefined')
                         .col-md-12
                             legend Teams
                             div {{id.Issue.Teams}}
-                    .row.top-buffer
+                    .row.top-buffer(ng-if='id.Issue.Locations !== undefined')
                         .col-md-12
                             legend Locations
                             div {{id.Issue.Locations}}

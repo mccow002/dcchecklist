@@ -33,8 +33,11 @@ gulp.task('sass', function(){
 
 gulp.task('typescript', function(){
     return tsProject.src()
+        .pipe(sourcemaps.init())
         .pipe(ts(tsProject))
-        .js.pipe(gulp.dest('./dist/server'))
+        .js
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('./dist/server'))
         .pipe(notify({message: 'Finished compiling typescript', onLast: true}))
         .pipe(livereload());
 });

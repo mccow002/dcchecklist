@@ -71,6 +71,7 @@ export class SeriesService {
 
     public LinkToFolder(series: ISeries, folderPath: string, filePattern: string): ng.IPromise<ISeries> {
         let q = this.$q.defer();
+        console.log(folderPath);
         let req = this.$http.post('/seriesapi/linkToFolder/', {
             Series: series,
             FolderPath: folderPath,
