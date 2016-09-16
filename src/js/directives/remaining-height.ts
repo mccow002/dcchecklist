@@ -1,6 +1,11 @@
 export module Directives {
-    export function RemainingHeight($window: ng.IWindowService) {
+    export function RemainingHeight($window: ng.IWindowService, $mdMedia: ng.material.IMedia) {
         var calcHeight = (e: ng.IRootElementService) => {
+            if($mdMedia('md')) {
+                $(e[0]).css('height', '');
+                return;
+            }
+
             var header = $('#header').height();
             var seriesHeader = $('#series-header').height();
             var windowHeight = $window.innerHeight;
@@ -12,10 +17,17 @@ export module Directives {
         return {
             restrict: 'A',
             link: (scope: ng.IScope, e: ng.IRootElementService) => {
-                calcHeight(e);
+                let calc = () => calcHeight(e);
+                calc();
+
+                angular.element($window).bind('resize', calc);
+
+                scope.$on('$destroy', () => {
+                        angular.element($window).unbind('resize', calc);
+                    });
             }
         }
     }
 
-    RemainingHeight.$inject = ['$window'];
+    RemainingHeight.$inject = ['$window', '$mdMedia'];
 }

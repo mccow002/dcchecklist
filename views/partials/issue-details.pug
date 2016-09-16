@@ -1,6 +1,6 @@
 div
     md-toolbar
-        .md-toolbar-tools
+        .md-toolbar-tools(ng-if='!id.LoadingIssue')
             h2 
                 span(ng-if='!id.Issue.Title') {{$parent.sr.Series.Name}} - {{id.Issue.Number}}
                 span(ng-if='id.Issue.Title') {{id.Issue.Title}}
@@ -11,10 +11,11 @@ div
                 span(ng-if='!id.LoadingMetadata') Load Metadata
                 md-progress-circular(md-mode='indeterminate', md-diameter='25px', style='margin: auto', ng-if='id.LoadingMetadata')
             md-button(ng-click='id.open($event)', ng-if='id.Issue.FilePath') Open
-
-    md-content(flex, layout-padding)
+    
+    md-progress-linear(md-mode='query', ng-if='id.LoadingIssue')
+    md-content(flex, layout-padding, ng-if='!id.LoadingIssue')
         .container-fluid
-            .row(ng-if='id.Issue.FilePath === undefined')
+            .row(ng-if='!id.Issue.FilePath')
                 .col-md-12
                     h3 To begin, link to a file
             .row
@@ -22,24 +23,25 @@ div
                     .row
                         .col-md-12
                             span.text-muted {{id.getMonth(id.Issue.Month)}} {{id.Issue.Year}}
-                    .row.top-buffer(ng-if='id.Issue.Summary !== undefined')
+                    .row.top-buffer(ng-if='id.Issue.Summary')
                         .col-md-12
                             p {{id.Issue.Summary}}
-                    .row(ng-if='id.Issue.Characters !== undefined')
+                    .row(ng-if='id.Issue.Characters')
                         .col-md-12
                             legend Characters
                             div {{id.Issue.Characters}}
-                    .row.top-buffer(ng-if='id.Issue.Teams !== undefined')
+                    .row.top-buffer(ng-if='id.Issue.Teams')
                         .col-md-12
                             legend Teams
                             div {{id.Issue.Teams}}
-                    .row.top-buffer(ng-if='id.Issue.Locations !== undefined')
+                    .row.top-buffer(ng-if='id.Issue.Locations')
                         .col-md-12
                             legend Locations
                             div {{id.Issue.Locations}}
                 
                 .col-md-6
                     small {{id.Issue.FilePath}}
-                    md-card(ng-if='id.Issue.FilePath !== undefined')
+                    md-card(ng-if='id.Issue.FilePath')
                         md-card-content.text-center
-                            img(ng-src='{{id.getCoverUrl()}}', style='height: 550px')
+                            img(src='{{id.getCoverUrl()}}', style='height: 550px', ng-click='id.open($event)', spinner-on-load, on-load='id.onCoverLoad()')
+                            md-progress-circular.cover-spinner(md-mode='indeterminate', ng-if='id.LoadingCover')

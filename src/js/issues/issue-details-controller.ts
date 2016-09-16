@@ -13,6 +13,8 @@ export class IssueDetailsController {
 
     Issue: IIssue;
     LoadingMetadata: boolean = false;
+    LoadingIssue: boolean = true;
+    LoadingCover: boolean = true;
 
     constructor(
         private $scope: ng.IScope,
@@ -27,7 +29,10 @@ export class IssueDetailsController {
         private readerPresenter: ReaderPresenter
     ) {
         issueService.GetIssue($stateParams.issueId)
-            .then((result: IIssue) => this.Issue = result);
+            .then((result: IIssue) => {
+                this.Issue = result;
+                this.LoadingIssue = false;
+            });
     }
 
     getCoverUrl() {
@@ -64,6 +69,7 @@ export class IssueDetailsController {
         this.LoadingMetadata = true;
         this.issueService.GetMetadata(this.Issue)
             .then((result) => {
+                console.log(result);
                 this.Issue = result;
                 console.log(this.Issue);
                 this.toastr.success('Metadata loaded!');
@@ -81,7 +87,9 @@ export class IssueDetailsController {
 
     open(ev: any) {
         this.readerPresenter.Open(this.Issue, ev);
-        // this.issueService.Open(this.Issue);
-        // this.ViewerOpen = true;
+    }
+
+    onCoverLoad() {
+        this.$scope.$apply(() => this.LoadingCover = false);
     }
 }

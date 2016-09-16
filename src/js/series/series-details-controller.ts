@@ -11,6 +11,7 @@ export class SeriesDetailsController {
 
     Series: ISeries;
     route: string;
+    LoadingSeries: boolean = true;
 
     constructor(
         private $stateParams: ISeriesDetailsRouteParams,
@@ -24,10 +25,13 @@ export class SeriesDetailsController {
         seriesService.GetOne($stateParams.seriesId)
             .then((series: ISeries) => {
                 this.Series = series;
-                this.$state.go('seriesDetails.Issue', {
-                    seriesId: $stateParams.seriesId,
-                    issueId: series.Issues[0]._id
-                });
+                this.LoadingSeries = false;
+                if($state.current.name !== 'seriesDetails.Issue') {
+                    this.$state.go('seriesDetails.Issue', {
+                        seriesId: $stateParams.seriesId,
+                        issueId: series.Issues[0]._id
+                    });
+                }
             });
 
         this.route = JSON.stringify($window.location.hash);

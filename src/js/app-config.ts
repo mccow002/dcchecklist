@@ -24,7 +24,7 @@ export class AppConfig {
                 .state('seriesDetails', {
                     url: '/series/:seriesId',
                     templateUrl: '/dist/views/series-details.html',
-                    controller: 'seriesDetailsCtrl'    
+                    controller: 'seriesDetailsCtrl' 
                 })
                 .state('seriesDetails.Issue', {
                     url: '/:issueId',
@@ -35,9 +35,7 @@ export class AppConfig {
                         $document: ($document: ng.IDocumentService) => $document
                     },
                     onExit: (pubsub: any, $document: ng.IDocumentService) => {
-                        console.log('exitings....');
                         pubsub.unsubAll();
-                        //$document.unbind('keydown');
                     } 
                 })
                 .state('collection', {

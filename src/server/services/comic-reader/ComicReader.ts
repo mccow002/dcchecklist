@@ -10,10 +10,7 @@ import { IComicFileReader } from './IComicFileReader';
 import { ZipFileReader } from './ZipFileReader';
 import { RarFileReader } from './RarFileReader';
 import { PageData } from './PageData';
-var Unrar = require('unrar');
-var streamTo = require('stream-to-array');
-var imagemin = require('imagemin');
-var imageminMozjpeg = require('imagemin-mozjpeg');
+var rarfile = require('rarfile');
 
 
 export class ComicReader {
@@ -21,13 +18,10 @@ export class ComicReader {
     reader: IComicFileReader;
 
     constructor(private filepath: string) {
-        let ext = path.extname(filepath);
-        if(ext === '.cbr') {
+        if(rarfile.isRarFile(filepath)) {
             this.reader = new RarFileReader(filepath);
-        } else if(ext === '.cbz') {
-            this.reader = new ZipFileReader(filepath);
         } else {
-            throw 'Unknown File Type!';
+            this.reader = new ZipFileReader(filepath);
         }
     }
 
@@ -44,7 +38,10 @@ export class ComicReader {
         var dbXml = fs.readFileSync(comicDb, { encoding: 'UTF-8' });
         var doc = new DOMParser().parseFromString(dbXml);
 
-        console.log(xpath.select('/ComicDatabase/Books/Book[@File="' + this.filepath + '"]', doc).toString());
+        if(!xpath.select('/ComicDatabase/Books/Book[@File="' + this.filepath + '"]', doc).toString()) {
+            throw 'File not in ComicRack!';
+        }
+
         var book = (field: string) => xpath.select('string(/ComicDatabase/Books/Book[@File="' + this.filepath + '"]/' + field + ')', doc);
                 
         issue.Title = book('Title');

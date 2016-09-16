@@ -1,16 +1,21 @@
+interface ISpinnerScope extends ng.IScope {
+    onLoad: () => void
+}
+
 export module Directives {
     export function SpinnerOnLoad() {
         return {
             restrict: 'A',
             scope: {
-                ngSrc: '='
+                ngSrc: '=',
+                onLoad: '&'
             },
-            link: (scope: ng.IScope, element: ng.IRootElementService) => {
+            link: (scope: ISpinnerScope, element: ng.IRootElementService) => {
                 element.on('load', () => {
-                    alert('Loaded!');
+                    scope.onLoad();
                 });
                 scope.$watch('ngSrc', () => {
-                    alert('Spinning!');
+                    
                 });
             }
         }

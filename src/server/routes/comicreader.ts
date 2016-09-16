@@ -6,8 +6,6 @@ import { Issue, IIssue } from '../models/issue';
 import { ComicReader } from '../services/comic-reader/ComicReader';
 import { PageData } from '../services/comic-reader/PageData';
 var app = require('../../../app');
-var Unrar = require('unrar');
-var streamTo = require('stream-to-array');
 
 class ReaderApi {
 
@@ -33,12 +31,13 @@ class ReaderApi {
             
             reader.GetFiles()
                 .then((entries: any) => {
-                    reader.GetImageBuffer(entries[0])
-                    .then((pageData: PageData) => {
-                        console.log(pageData);
-                        res.writeHead(200, { 'Content-Type': 'image/jpeg' });
-                        res.end(pageData.ImageBuffer, 'binary');
-                    });
+                    return reader.GetImageBuffer(entries[0]);                    
+                })
+                .then((pageData: PageData) => {
+                    res.writeHead(200, { 'Content-Type': 'image/jpeg' });
+                    res.end(pageData.ImageBuffer, 'binary');
+                }, () => {
+                    throw 'An error occurred!';
                 });
         });
     }

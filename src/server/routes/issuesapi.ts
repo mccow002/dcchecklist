@@ -30,7 +30,7 @@ class IssuesApi {
         
         Issue.findByIdAndUpdate(issue._id, issue, 
             (err: mongoose.Error, result: IIssue) => {
-                res.json(result);
+                res.json(issue);
             }); 
     }
 

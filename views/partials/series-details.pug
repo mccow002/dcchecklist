@@ -1,8 +1,8 @@
 .div(ng-controller='seriesDetailsCtrl as sr')
     md-content#series-header
         md-toolbar.md-hue-2
-            .md-toolbar-tools
-                md-button.md-fab.md-primary.md-mini(hide-gt-sm, ng-click='sr.toggleIssues()')
+            .md-toolbar-tools(, ng-if='!sr.LoadingSeries')
+                md-button.md-fab.md-primary.md-mini(hide-gt-md, ng-click='sr.toggleIssues()')
                     i.fa.fa-bars
                 div(layout='column')
                     .md-headline(flex) {{sr.Series.Name}}
@@ -17,9 +17,9 @@
                     i.fa.fa-link.fa-fw
                 md-button.md-fab.md-raised.md-mini.md-warn(ng-click='sr.deleteSeries($event)')
                     i.fa.fa-trash-o.fa-fw
-
-    section(layout='row', flex)
-        md-sidenav.md-sidenav-left(md-component-id="left", md-is-locked-open="$mdMedia('gt-sm')", md-whiteframe="4", style='overflow: auto', remaining-height)
+    md-progress-linear(md-mode='query', ng-if='sr.LoadingSeries')
+    section(layout='row', flex, ng-if='!sr.LoadingSeries')
+        md-sidenav.md-sidenav-left(md-component-id="left", md-is-locked-open="$mdMedia('gt-md')", md-whiteframe="4", style='overflow: auto', remaining-height)
            md-content
                 //- ul.nav.nav-pills.nav-stacked
                 //-     li(ng-repeat='issue in sr.Series.Issues', ui-sref-active='active', md-ink-ripple)
@@ -27,7 +27,7 @@
                 //-             span {{sr.Series.Name}} - {{issue.Number}}
                 //-             i.fa.fa-link.fa-fw.pull-right(ng-if='issue.FilePath !== undefined')
                 md-list
-                    md-list-item(ng-click='sr.goToIssue(issue._id)', ng-class='sr.getActive(issue._id)', ng-repeat='issue in sr.Series.Issues')
+                    md-list-item(ng-class='sr.getActive(issue._id)', ng-click='sr.goToIssue(issue._id)', ng-repeat='issue in sr.Series.Issues')
                         p {{sr.Series.Name}} - {{issue.Number}}
                         i.fa.fa-link.fa-fw.pull-right(ng-if='issue.FilePath !== undefined')
 

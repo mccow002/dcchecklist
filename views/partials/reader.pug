@@ -4,7 +4,7 @@ md-dialog.reader(
     ng-swipe-left='rc.next()', 
     ng-swipe-right='rc.previous()')
     md-dialog-content
-        a.closebtn(ng-click='rc.closeViewer()') &times;
+        md-button.md-fab.closebtn(ng-click='rc.closeViewer()') &times;
         a.left-arrow(ng-click='rc.previous()')
             i.fa.fa-arrow-left
         a.right-arrow(ng-click='rc.next()')
