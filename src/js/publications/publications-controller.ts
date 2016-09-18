@@ -107,7 +107,7 @@ export class PublicationsController {
         this.parseSeriesPresenter.Open(pub, ev)
             .then((series: ISeries) => {
                 this.toastr.success('Series parsed!');
-                this.$state.go('series');
+                this.$state.go('seriesDetails', {seriesId: series._id});
             });
     }
 }

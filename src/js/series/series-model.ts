@@ -9,6 +9,8 @@ export interface ISeries {
     SeriesType: string,
     StartDate: Date,
     EndDate: Date,
+    NextSeries: ISeries,
+    PreviousSeries: ISeries,
     Issues: Array<IIssue>
 }
 
@@ -21,6 +23,8 @@ export class Series implements ISeries {
     SeriesType: string;
     StartDate: Date;
     EndDate: Date;
+    NextSeries: ISeries;
+    PreviousSeries: ISeries;
     Issues: Array<IIssue>;
 
     constructor(name: string, volume: number) {

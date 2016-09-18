@@ -9,6 +9,8 @@ export interface ISeries extends mongoose.Document {
     NumberOfIssues: Number,
     StartDate: Date,
     EndDate: Date,
+    NextSeries: ISeries,
+    PreviousSeries: ISeries,
     Issues: Array<IIssue>
 }
 
@@ -20,6 +22,14 @@ export const SeriesSchema = new mongoose.Schema({
     NumberOfIssues: Number,
     StartDate: Date,
     EndDate: Date,
+    NextSeries: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'series' 
+    },
+    PreviousSeries: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'series' 
+    },
     Issues: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'issue'

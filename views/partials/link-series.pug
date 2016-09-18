@@ -1,20 +1,20 @@
-.modal-header
-    h2 Link Series to Folder
-.modal-body
-    .container-fluid
-        .row
-            .col-md-12
+md-dialog(flex='50')
+    md-toolbar
+        .md-toolbar-tools
+            h2 Link Series to Folder
+    md-dialog-content
+        .md-dialog-content(layout='column', flex)
+            md-input-container.md-block.skinny
                 label File Path:
-                input.form-control(type='text', ng-model='ls.FilePath', style='margin-bottom: 10px')
-        .row
-            .col-md-12
-                btn.btn.btn-default.pull-right(ng-click='ls.scanFolder()', ng-disabled='ls.FilePath === ""') Scan Folder
-        .row
+                input(ng-model='ls.FilePath', style='margin-bottom: 10px')
+            div
+                span(flex)
+                md-button.pull-right(ng-click='ls.scanFolder()', ng-disabled='ls.FilePath === ""', flex) Scan Folder
             div.scroll-window
-                ul.nav.nav-pills.nav-stacked
-                    li(ng-repeat='f in ls.Files', ng-class='{active: ls.SelectedFile == f}')
-                        a(ng-click='ls.SelectedFile = f') {{f}}
+                md-list
+                    md-list-item(ng-repeat='f in ls.Files', ng-class='{"nav-active": ls.SelectedFile == f}', ng-click='ls.SelectedFile = f')
+                        p {{f}}
 
-.modal-footer
-    button.btn.btn-default(ng-click="ls.cancel()") Cancel
-    button.btn.btn-primary(ng-click="ls.link()", ng-disabled='ls.SelectedFile === ""') Link
+    md-dialog-actions(layout='row')
+        md-button.md-raised(ng-click="ls.cancel()") Cancel
+        md-button.md-raised.md-primary(ng-click="ls.link()", ng-disabled='ls.SelectedFile === ""') Link

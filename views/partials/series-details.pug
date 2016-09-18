@@ -1,11 +1,13 @@
 .div(ng-controller='seriesDetailsCtrl as sr')
     md-content#series-header
         md-toolbar.md-hue-2
-            .md-toolbar-tools(, ng-if='!sr.LoadingSeries')
+            .md-toolbar-tools(ng-if='!sr.LoadingSeries')
                 md-button.md-fab.md-primary.md-mini(hide-gt-md, ng-click='sr.toggleIssues()')
                     i.fa.fa-bars
                 div(layout='column')
-                    .md-headline(flex) {{sr.Series.Name}}
+                    .md-headline(flex) 
+                        span {{sr.Series.Name}} 
+                        span.xs-small(ng-if='sr.Series.Volume') Vol. {{sr.Series.Volume}}
                     .md-subhead(flex) Dates: {{sr.Series.StartDate | date: 'MM/yyyy'}} - {{sr.Series.EndDate | date: 'MM/yyyy'}}
                 span(flex)
                 //- .btn-group
@@ -13,12 +15,29 @@
                 //-         i.fa.fa-link.fa-fw
                 //-     a.btn.btn-danger(ng-click='sr.deleteSeries($event)', md-ink-ripple)
                 //-         i.fa.fa-trash-o.fa-fw
-                md-button.md-fab.md-raised.md-mini.md-primary(ng-click='sr.linkSeries()')
-                    i.fa.fa-link.fa-fw
-                md-button.md-fab.md-raised.md-mini.md-warn(ng-click='sr.deleteSeries($event)')
-                    i.fa.fa-trash-o.fa-fw
+                md-button.md-icon-button(ng-click='sr.previousSeries($event)')
+                    md-tooltip(md-direction='top') Previous Volume
+                    i.fa.fa-arrow-left
+                md-button.md-icon-button(ng-click='sr.nextSeries($event)')
+                    md-tooltip(md-direction='top') Next Volume
+                    i.fa.fa-arrow-right
+                md-fab-speed-dial.md-scale(md-direction='left')
+                    md-fab-trigger
+                        md-button.md-fab.md-mini
+                            i.fa.fa-bars
+                    md-fab-actions(style='width: 0px')
+                        md-button.md-fab.md-raised.md-mini.md-accent
+                            md-tooltip(md-direction='top') Merge With Series
+                            i.fa.fa-compress
+                        md-button.md-fab.md-raised.md-mini.md-primary(ng-click='sr.linkSeries($event)')
+                            md-tooltip(md-direction='top') Link To Folder
+                            i.fa.fa-link.fa-fw
+                        md-button.md-fab.md-raised.md-mini.md-warn(ng-click='sr.deleteSeries($event)')
+                            md-tooltip(md-direction='top') Delete Series
+                            i.fa.fa-trash-o.fa-fw
+
     md-progress-linear(md-mode='query', ng-if='sr.LoadingSeries')
-    section(layout='row', flex, ng-if='!sr.LoadingSeries')
+    section(layout='row', ng-if='!sr.LoadingSeries')
         md-sidenav.md-sidenav-left(md-component-id="left", md-is-locked-open="$mdMedia('gt-md')", md-whiteframe="4", style='overflow: auto', remaining-height)
            md-content
                 //- ul.nav.nav-pills.nav-stacked

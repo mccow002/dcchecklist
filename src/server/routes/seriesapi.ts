@@ -57,16 +57,25 @@ class SeriesApi {
             }
 
             seriesObj.Issues = new Array<IIssue>();
-            console.log(seriesObj);
             for(let i = 0; i < results.length; i++) {
                 seriesObj.Issues.push(results[i]._id);
             }
 
             Series.create(seriesObj, (err: mongoose.Error, result: ISeries) => {
                 if(err) throw err;
-                res.json(200);
+                res.json(result);
             });
         })
+    }
+
+    LinkPrevious(req: express.Request, res: express.Response) {
+        var body = <ICreateSeriesLink> req.body;
+        Series.findById(body.SeriesId, (err: mongoose.Error, result: ISeries) => {
+            result.PreviousSeries = body.SeriesToLink;
+            Series.findByIdAndUpdate(body.SeriesId, result, (err: mongoose.Error, updatedSeries: ISeries) => {
+                res.json(updatedSeries);
+            })
+        });
     }
 
     public GetFilesInDir(req: express.Request, res: express.Response) {
@@ -147,26 +156,24 @@ class SeriesApi {
                             });
                     });
             });
-
-        // var result  = scanReg().exec(files[i]);
-        // var fileStart = result[1];
-
-        // if(fileStart === prefix) {
-            
-        // }
     }
 
     public DeleteSeries(req: express.Request, res: express.Response) {
         var id = req.params.id;
 
         Series.findById(id, (err: mongoose.Error, result: ISeries) => {
-            result.remove();
-            res.json(200);
-        })
+            var promises = new Array<q.IPromise<IIssue>>();
+            result.Issues.forEach(i => {
+                var d = q.defer();
+                Issue.findByIdAndRemove(i, () => d.resolve());
+                promises.push(d.promise);
+            });
 
-        // Series.findByIdAndRemove(id, (err: mongoose.Error) => {
-        //     res.json(200);
-        // })
+            q.allSettled(promises)
+                .then(() => {
+                    Series.findByIdAndRemove(id, () => res.json(200));
+                });
+        })
     }
 
 }
@@ -177,6 +184,11 @@ interface ILinkToFolderReq {
     FilePattern: string
 }
 
+interface ICreateSeriesLink {
+    SeriesId: string,
+    SeriesToLink: any
+}
+
 let seriesApi = new SeriesApi();
 let router = express.Router();
 router.post('/create', seriesApi.CreateSeries);
@@ -185,5 +197,6 @@ router.get('/:id', seriesApi.GetOne);
 router.post('/getfilesindir/', seriesApi.GetFilesInDir);
 router.post('/linkToFolder', seriesApi.LinkToFolder);
 router.delete('/:id', seriesApi.DeleteSeries);
+router.put('/linkprevious/', seriesApi.LinkPrevious);
 
 module.exports = router;

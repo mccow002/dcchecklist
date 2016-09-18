@@ -58,19 +58,21 @@ export class SeriesDetailsController {
         return '';
     }
 
-    linkSeries() {
-        var mi = this.$uibModal.open({
-            controller: 'linkSeriesCtrl as ls',
+    linkSeries(ev: any) {
+        this.$mdDialog.show({
+            controller: LinkSeriesController,
+            controllerAs: 'ls',
             templateUrl: '/dist/views/link-series.html',
-            resolve: {
-                series: () => this.Series
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose: true,
+            locals: {
+                series: this.Series
             }
-        });
-
-        mi.result.then((result: ISeries) => {
-            this.Series = result;
-            this.toastr.success('File Successfully Linked!');
-            this.$state.reload();
+        })
+        .then((result: ISeries) => {
+            this.toastr.success('Series Linked!');
+            this.Series = result; 
         });
     }
 
@@ -94,11 +96,33 @@ export class SeriesDetailsController {
         this.$mdSidenav('left')
             .toggle();
     }
+
+    previousSeries(ev: any) {
+        if(this.Series.PreviousSeries){
+            this.$state.go('seriesDetails', { seriesId: this.Series.PreviousSeries });
+            return;
+        }
+
+         this.$mdDialog.show({
+            controller: PickSeriesController,
+            controllerAs: 'ps',
+            templateUrl: '/dist/views/pick-series.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose: true,
+            locals: {
+                series: this.Series
+            }
+        })
+        .then((result: ISeries) => {
+            this.$state.go('seriesDetails', { seriesId: result._id });
+        });
+    }
 }
 
-export class LinkSeriesController {
+class LinkSeriesController {
     
-    static $inject = ['$uibModalInstance', 'seriesService', 'toastr', 'series'];
+    static $inject = ['$mdDialog', 'seriesService', 'toastr', 'series'];
 
     Series: ISeries;
     FilePath: string;
@@ -106,7 +130,7 @@ export class LinkSeriesController {
     SelectedFile: string;
 
     constructor(
-        private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance,
+        private $mdDialog: ng.material.IDialogService,
         private seriesService: SeriesService,
         private toastr: ng.toastr.IToastrService,
         private series: ISeries) {
@@ -117,7 +141,7 @@ export class LinkSeriesController {
         }
 
     cancel() {
-        this.$uibModalInstance.dismiss('cancel');
+        this.$mdDialog.cancel();
     }
 
     scanFolder() {
@@ -129,6 +153,42 @@ export class LinkSeriesController {
 
     link() {
         this.seriesService.LinkToFolder(this.Series, this.FilePath, this.SelectedFile);
-        this.$uibModalInstance.close(this.Series);
+        this.$mdDialog.hide(this.Series);
     }
 }
+
+class PickSeriesController {
+
+    static $inject = ['$mdDialog', 'seriesService', 'series'];
+
+    Series: Array<ISeries>;
+    SelectedSeries: ISeries;
+    SearchTerm: string;
+
+    constructor(
+        private $mdDialog: ng.material.IDialogService,
+        private seriesService: SeriesService,
+        private series: ISeries) {
+        seriesService.GetAll()
+            .then((result: ISeries[]) => this.Series = result);
+    }
+
+    query(searchTerm: string) {
+        return searchTerm ? this.Series.filter(this.createFilterFor(searchTerm) ) : this.Series;
+    }
+
+    createFilterFor(query: string) {
+      var lowercaseQuery = angular.lowercase(query);
+
+      return function filterFn(series: ISeries) {
+        return (series.Name.toLowerCase().indexOf(lowercaseQuery) === 0);
+      };
+
+    }
+
+    link() {
+        this.seriesService.LinkPrevious(this.series._id, this.SelectedSeries._id)
+            .then(() => this.$mdDialog.hide(this.SelectedSeries));
+    }
+
+} 

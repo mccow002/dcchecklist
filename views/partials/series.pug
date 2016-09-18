@@ -1,11 +1,16 @@
-nav.navbar.navbar-default
-        .container-fluid
-            .collapse.navbar-collapse
-                ul.nav.navbar-nav
-                    li
-                        a(ng-click='sr.addSeries($event)')
-                            i.fa.fa-plus.fa-fw
-                            span  New Series
+//- nav.navbar.navbar-default
+//-         .container-fluid
+//-             .collapse.navbar-collapse
+//-                 ul.nav.navbar-nav
+//-                     li
+//-                         a(ng-click='sr.addSeries($event)')
+//-                             i.fa.fa-plus.fa-fw
+//-                             span  New Series
+md-toolbar
+    .md-toolbar-tools
+        md-button(ng-click='sr.addSeries($event)')
+            i.fa.fa-plus.fa-fw
+            span  New Series
 
 table.table
     tr(ng-repeat='s in sr.Series')

@@ -29,26 +29,10 @@ export class SeriesController {
             locals: {
                 pub: null
             }
-            //fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
         })
-        .then(function(answer) {
-                alert('creating series!');
-                //$scope.status = 'You said the information was "' + answer + '".';
-            }, function() {
-                //$scope.status = 'You cancelled the dialog.';
-        });
-
-        // let mi = this.$uibModal.open({
-        //     controller: 'parseSeriesCtrl as ps',
-        //     templateUrl: '/dist/views/parseSeries.html',
-        //     resolve: {
-        //         pub: () => <IPublication>null
-        //     }
-        // });
-
-        // mi.result.then((series: ISeries) => {
-        //     this.toastr.success('Series Added!');
-        //     this.$state.go('series');
-        // });
+        .then((series: ISeries) => {
+                this.toastr.success('Series Added!');
+                this.$state.go('seriesDetails', {seriesId: series._id});
+            });
     }
 }

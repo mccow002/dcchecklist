@@ -1,0 +1,23 @@
+md-dialog(flex='30')
+    md-toolbar
+        .md-toolbar-tools
+            h3 Link Series
+            span(flex)
+            md-button.md-icon-button(ng-click='ps.cancel()')
+                i.fa.fa-times
+    md-dialog-content
+        .md-dialog-content
+            p Select Series
+            md-autocomplete(
+                md-selected-item='ps.SelectedSeries',
+                md-search-text='ps.SearchTerm'
+                md-items='series in ps.query(ps.SearchTerm)',
+                md-item-text='series.Name',
+                md-min-length="0",
+                md-autofocus=''
+            )
+                md-item-template 
+                    span(md-hightlight-text='ps.searchTerm') {{series.Name}}
+                md-not-found No series matching "{{ps.SearchTerm}}" were found.
+    md-dialog-actions
+        md-button.md-raised.md-primary(ng-click='ps.link()') Link

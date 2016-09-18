@@ -121,7 +121,7 @@ export class ParseSeriesController {
         }
 
         this.seriesService.Create(series)
-            .then((result) => this.$mdDialog.hide(series));
+            .then((result) => this.$mdDialog.hide(result));
     }
 
 }

@@ -3,7 +3,7 @@ import { module } from 'angular';
 import { PublicationsController } from './publications/publications-controller';
 import { ParseSeriesController } from './series/parse-series-controller';
 import { SeriesController } from './series/series-controller';
-import { SeriesDetailsController, LinkSeriesController } from './series/series-details-controller';
+import { SeriesDetailsController } from './series/series-details-controller';
 import { IssueDetailsController } from './issues/issue-details-controller';
 import { CollectionController, NewFolderController } from './collection/collection-controller';
 import { RootController } from './root-controller';
@@ -64,7 +64,6 @@ app.controller('parseSeriesCtrl', ParseSeriesController);
 app.controller('seriesDetailsCtrl', SeriesDetailsController);
 app.controller('seriesCtrl', SeriesController);
 app.controller('issueDetailsCtrl', IssueDetailsController);
-app.controller('linkSeriesCtrl', LinkSeriesController);
 app.controller('collectionCtrl', CollectionController);
 app.controller('newFolderCtrl', NewFolderController);
 
