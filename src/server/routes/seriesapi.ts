@@ -78,6 +78,16 @@ class SeriesApi {
         });
     }
 
+    LinkNext(req: express.Request, res: express.Response) {
+        var body = <ICreateSeriesLink> req.body;
+        Series.findById(body.SeriesId, (err: mongoose.Error, result: ISeries) => {
+            result.NextSeries = body.SeriesToLink;
+            Series.findByIdAndUpdate(body.SeriesId, result, (err: mongoose.Error, updatedSeries: ISeries) => {
+                res.json(updatedSeries);
+            })
+        });
+    }
+
     public GetFilesInDir(req: express.Request, res: express.Response) {
         let dir = req.body;
         console.log(dir);
@@ -198,5 +208,6 @@ router.post('/getfilesindir/', seriesApi.GetFilesInDir);
 router.post('/linkToFolder', seriesApi.LinkToFolder);
 router.delete('/:id', seriesApi.DeleteSeries);
 router.put('/linkprevious/', seriesApi.LinkPrevious);
+router.put('/linknext/', seriesApi.LinkNext);
 
 module.exports = router;

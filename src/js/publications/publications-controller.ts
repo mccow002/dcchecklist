@@ -76,7 +76,12 @@ export class PublicationsController {
             .then((data: IPublication[]) => {
                 this.Publications = data;
             });
-    };
+    }
+
+    clearSearch() {
+        this.SearchParams.SearchText = '';
+        this.load();
+    }
 
     BuildCvSearchUrl(pub: IPublication) {
         return "http://comicvine.gamespot.com/search/?q=" + pub.Title.replace(/ /g, '+');

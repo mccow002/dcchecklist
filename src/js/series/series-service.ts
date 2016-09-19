@@ -122,4 +122,22 @@ export class SeriesService {
         return q.promise;
     }
 
+    public LinkNext(seriesId: string, seriesToLink: string) {
+        let q = this.$q.defer();
+        let req = this.$http.put('/seriesapi/linknext', {
+            SeriesId: seriesId,
+            SeriesToLink: seriesToLink
+        });
+
+        req.success((series: ISeries) => {
+            q.resolve(series);
+        });
+
+        req.error(() => {
+            q.reject();
+        });
+
+        return q.promise;
+    }
+
 }

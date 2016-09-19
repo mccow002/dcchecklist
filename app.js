@@ -34,6 +34,7 @@ var partials = require('./dist/server/routes/partials');
 var seriesapi = require('./dist/server/routes/seriesapi');
 var issuesapi = require('./dist/server/routes/issuesapi');
 var readerapi = require('./dist/server/routes/comicreader')(io);
+var collectionapi = require('./dist/server/routes/collectionapi');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -60,6 +61,7 @@ app.use('/partials', partials);
 app.use('/seriesapi', seriesapi);
 app.use('/issuesapi', issuesapi);
 app.use('/readerapi', readerapi);
+app.use('/collectionapi', collectionapi);
 
 //connect to mongodb
 // console.log(Config.DbConnection);

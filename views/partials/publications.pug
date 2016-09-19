@@ -1,21 +1,33 @@
 div
-    .navbar.navbar-default
-        .container-fluid
+    //- .navbar.navbar-default
+    //-     .container-fluid
+    //-         nav
+    //-             ul.pagination.pull-left
+    //-                 li(ng-repeat='i in ck.Indexes track by $index', ng-class="{active: ck.Index == $index}")
+    //-                     a(ui-sref='publications({sort:i})') {{i}}
+    //-         form.navbar-form.navbar-left.pull-right
+    //-             .form-group
+    //-                 input(type='text', class='form-control', placeholder='Search', ng-model='ck.SearchParams.SearchText')
+    //-             button(class='btn btn-default', type='submit', ng-click='ck.search()')
+    //-                 i.fa.fa-search
+    md-toolbar
+        .md-toolbar-tools
             nav
                 ul.pagination.pull-left
                     li(ng-repeat='i in ck.Indexes track by $index', ng-class="{active: ck.Index == $index}")
                         a(ui-sref='publications({sort:i})') {{i}}
-            form.navbar-form.navbar-left.pull-right
-                .form-group
-                    input(type='text', class='form-control', placeholder='Search', ng-model='ck.SearchParams.SearchText')
-                button(class='btn btn-default', type='submit', ng-click='ck.search()')
+            span(flex)
+            form
+                md-input-container.md-no-float(md-theme='input')
+                    label &nbsp;
+                    input(ng-model='ck.SearchParams.SearchText' placeholder='Search', input-clear, on-clear='ck.clearSearch()')
+                md-button.md-fab.md-raised.md-primary.md-mini.md-hue-3(ng-click='ck.search()', type='submit')
                     i.fa.fa-search
 
-    .progress(ng-if='ck.Loading')
-        .progress-bar.progress-bar-striped.active(style='width: 100%')
+    md-progress-linear(ng-if='ck.Loading', md-mode='query')
 
     
-    .row(ng-if='ck.SearchParams.SearchText !== "" && !ck.Loading')
+    .row(ng-if='ck.SearchParams.SearchText && !ck.Loading && ck.Publications.length === 0')
         .col-md-12.text-center
             div No Search Results Found!
 

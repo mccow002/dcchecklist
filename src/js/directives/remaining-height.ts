@@ -7,7 +7,7 @@ export module Directives {
             }
 
             var header = $('#header').height();
-            var seriesHeader = $('#series-header').height();
+            var seriesHeader = $('#series-header').height() || 0;
             var windowHeight = $window.innerHeight;
             var bodyMargin = parseInt($('body').css('paddingTop'));
 

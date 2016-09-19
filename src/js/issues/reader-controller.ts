@@ -10,7 +10,7 @@ export class ReaderPresenter {
     }
 
     public Open(issue: IIssue, ev: any) {
-        this.$mdDialog.show({
+        return this.$mdDialog.show({
             controller: ReaderController,
             controllerAs: 'rc',
             templateUrl: '/dist/views/reader.html',
@@ -41,6 +41,9 @@ export class ReaderController {
         private $window: ng.IWindowService,
         private issueService: IssueService) {
         this.ViewerHeight = ($window.innerHeight - 15) + 'px';
+        if(this.Issue.CurrentPage) {
+            this.CurrentPage = this.Issue.CurrentPage;
+        }
         
         this.issueService.RegisterPagesLoaded((args: any) => {
             this.IssuePages = args;
@@ -60,7 +63,9 @@ export class ReaderController {
         this.PageLoading = true;
         this.issueService.GetPage(
             this.Issue.FilePath,
-            this.IssuePages[this.CurrentPage]);
+            this.IssuePages[this.CurrentPage],
+            this.Issue._id,
+            this.CurrentPage);
     }
 
     calcWidth() {
@@ -70,7 +75,7 @@ export class ReaderController {
     }
 
     closeViewer() {
-        this.$mdDialog.cancel();
+        this.$mdDialog.hide(this.Issue);
     }
 
     next() {

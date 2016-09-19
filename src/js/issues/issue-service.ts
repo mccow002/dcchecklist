@@ -81,7 +81,7 @@ export class IssueService {
         return q.promise;
     }
 
-    public GetPage(filePath: String, page: string) {
+    public GetPage(filePath: String, page: string, issueId: string, currentPage: number) {
         // if(this.PagesCache.get(page) !== undefined){
         //     this.PageLoadedCallback(this.PagesCache.get(page));
         //     console.log('Page loaded from cache...');
@@ -91,7 +91,9 @@ export class IssueService {
         console.log('Emitting getPage...');
         this.socket.emit('getPage', {
                 filePath: filePath,
-                page: page
+                page: page,
+                issueId: issueId,
+                currentPage: currentPage
             });
     }
 

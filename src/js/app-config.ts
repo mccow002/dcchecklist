@@ -3,11 +3,12 @@ import * as http from './http-interceptor-factory';
 
 export class AppConfig {
 
-    static $inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider'];
+    static $inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider', '$mdThemingProvider'];
 
     constructor($stateProvider: ng.ui.IStateProvider,
         $urlRouteProvider: ng.ui.IUrlRouterProvider,
-        $httpProvider: ng.IHttpProvider){
+        $httpProvider: ng.IHttpProvider,
+        $mdThemingProvider: ng.material.IThemingProvider){
             $httpProvider.interceptors.push('httpInterceptor');
 
             $stateProvider

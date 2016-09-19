@@ -13,6 +13,7 @@ import { PubService } from './publications/publications-service';
 import { IssueService } from './issues/issue-service';
 import { ReaderPresenter } from './issues/reader-controller';
 import { ParseSeriesPresenter } from './series/parse-series-controller';
+import { CollectionService } from './collection/collection-service';
 
 import * as sockets from './socket-factory';
 import * as http from './http-interceptor-factory';
@@ -21,6 +22,7 @@ import * as keypress from './directives/keypress';
 import * as resize from './directives/window-resize';
 import * as spinner from './directives/spinner-on-load';
 import * as remainingHeight from './directives/remaining-height';
+import * as inputClear from './directives/clear-input';
 import { AppConfig } from './app-config';
 
 require('angular-bootstrap-npm');
@@ -48,6 +50,7 @@ app.service('seriesService', SeriesService);
 app.service('issueService', IssueService);
 app.service('readerPresenter', ReaderPresenter);
 app.service('parseSeriesPresenter', ParseSeriesPresenter);
+app.service('collectionService', CollectionService);
 
 app.factory('socket', sockets.Sockets.Factory);
 app.factory('pubsub', sockets.Sockets.PubSub);
@@ -57,6 +60,7 @@ app.directive('keypressEvents', keypress.Directives.Keypress);
 app.directive('windowResize', resize.Directives.WindowResize);
 app.directive('spinnerOnLoad', spinner.Directives.SpinnerOnLoad);
 app.directive('remainingHeight', remainingHeight.Directives.RemainingHeight);
+app.directive('inputClear', inputClear.Directives.InputClear);
 
 app.controller('rootCtrl', RootController);
 app.controller('publicationsCtrl', PublicationsController);

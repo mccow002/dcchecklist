@@ -15,7 +15,8 @@ export interface IIssue extends mongoose.Document {
     Editor: String,
     Characters: String, 
     Teams: String,
-    Locations: String
+    Locations: String,
+    CurrentPage: Number
 }
 
 export const IssueSchema = new mongoose.Schema({
@@ -33,7 +34,8 @@ export const IssueSchema = new mongoose.Schema({
     Editor: String,
     Characters: String, 
     Teams: String,
-    Locations: String
+    Locations: String,
+    CurrentPage: Number
 });
 IssueSchema.index({'$**': 'text'});
 

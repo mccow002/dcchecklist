@@ -193,3 +193,14 @@ md-list {
  md-input-container.skinny {
    margin: 0px
  }
+
+.md-toolbar-tools {
+  md-input-container .md-input {
+    color: #fff;
+    border-color: #fff;
+
+    ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+      color: rgb(255,255,255, 0.7);
+    }
+  }
+}

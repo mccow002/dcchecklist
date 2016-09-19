@@ -86,7 +86,10 @@ export class IssueDetailsController {
     }
 
     open(ev: any) {
-        this.readerPresenter.Open(this.Issue, ev);
+        this.readerPresenter.Open(this.Issue, ev)
+            .then((issue: IIssue) => {
+                this.Issue = issue;
+            });
     }
 
     onCoverLoad() {

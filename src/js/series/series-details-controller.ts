@@ -72,7 +72,7 @@ export class SeriesDetailsController {
         })
         .then((result: ISeries) => {
             this.toastr.success('Series Linked!');
-            this.Series = result; 
+            this.$state.reload();
         });
     }
 
@@ -103,7 +103,28 @@ export class SeriesDetailsController {
             return;
         }
 
-         this.$mdDialog.show({
+        this.linkToSeries(ev)
+            .then((result: ISeries) => {
+                this.seriesService.LinkPrevious(this.Series._id, result._id)
+                    .then(() => this.$state.go('seriesDetails', { seriesId: result._id }));
+            });
+    }
+
+    nextSeries(ev: any) {
+        if(this.Series.NextSeries){
+            this.$state.go('seriesDetails', { seriesId: this.Series.NextSeries });
+            return;
+        }
+
+        this.linkToSeries(ev)
+            .then((result: ISeries) => {
+                this.seriesService.LinkNext(this.Series._id, result._id)
+                    .then(() => this.$state.go('seriesDetails', { seriesId: result._id }));
+            });
+    }
+
+    linkToSeries(ev: any) {
+        return this.$mdDialog.show({
             controller: PickSeriesController,
             controllerAs: 'ps',
             templateUrl: '/dist/views/pick-series.html',
@@ -113,9 +134,6 @@ export class SeriesDetailsController {
             locals: {
                 series: this.Series
             }
-        })
-        .then((result: ISeries) => {
-            this.$state.go('seriesDetails', { seriesId: result._id });
         });
     }
 }
@@ -173,6 +191,10 @@ class PickSeriesController {
             .then((result: ISeries[]) => this.Series = result);
     }
 
+    cancel() {
+        this.$mdDialog.cancel();
+    }
+
     query(searchTerm: string) {
         return searchTerm ? this.Series.filter(this.createFilterFor(searchTerm) ) : this.Series;
     }
@@ -187,8 +209,7 @@ class PickSeriesController {
     }
 
     link() {
-        this.seriesService.LinkPrevious(this.series._id, this.SelectedSeries._id)
-            .then(() => this.$mdDialog.hide(this.SelectedSeries));
+        this.$mdDialog.hide(this.SelectedSeries);
     }
 
 } 

@@ -14,7 +14,8 @@ export interface IIssue {
     Editor: string,
     Characters: string, 
     Teams: string,
-    Locations: string
+    Locations: string,
+    CurrentPage: number
 }
 
 export class Issue implements IIssue {
@@ -34,6 +35,7 @@ export class Issue implements IIssue {
     Characters: string; 
     Teams: string;
     Locations: string;
+    CurrentPage: number;
 
     constructor(number: number) {
         this.Number = number;

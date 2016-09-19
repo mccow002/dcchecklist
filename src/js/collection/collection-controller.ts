@@ -1,15 +1,17 @@
 import { ITreeNode, TreeFolder, TreeList } from './tree-models';
+import { CollectionService } from './collection-service';
 
 export class CollectionController {
 
-    static $inject = ['$uibModal'];
+    static $inject = ['$uibModal', 'collectionService'];
 
     TreeModel: Array<ITreeNode>;
     TreeOptions: any;
     SelectedFolder: ITreeNode;
     ExpandedNodes: Array<ITreeNode>;
 
-    constructor(private $uibModal: ng.ui.bootstrap.IModalService) {
+    constructor(private $uibModal: ng.ui.bootstrap.IModalService,
+        private collectionService: CollectionService) {
         this.ExpandedNodes = new Array<any>();
 
         this.TreeOptions = {
@@ -21,28 +23,31 @@ export class CollectionController {
                 iLeaf: 'fa fa-book tree-node-override'
             },
             isLeaf: (node: any) => {
-                return node._type === 'List';
+                return node.NodeType === 'List';
             }
         };
 
-        this.TreeModel = [
-            {Name: "DC", _type: 'Folder', Children: [
-                {Name: 'Pre Crisis', _type: 'Folder', Children: [
-                    {Name: 'Teen Titans', _type: 'Folder', Children: []}
-                ]},
-                {Name: 'Crisis on Infinite Earths', _type: 'List', Children: []},
-                {Name: 'Post Crisis', _type: 'Folder', Children: [
+        collectionService.GetCollectionTree()
+            .then((result: ITreeNode[]) => this.TreeModel = result);
 
-                ]},
-                {Name: 'Zero Hour - Identity Crisis', _type: 'Folder', Children: [
+        // this.TreeModel = [
+        //     {Name: "DC", _type: 'Folder', Children: [
+        //         {Name: 'Pre Crisis', _type: 'Folder', Children: [
+        //             {Name: 'Teen Titans', _type: 'Folder', Children: []}
+        //         ]},
+        //         {Name: 'Crisis on Infinite Earths', _type: 'List', Children: []},
+        //         {Name: 'Post Crisis', _type: 'Folder', Children: [
 
-                ]}
-            ]}
-        ];
+        //         ]},
+        //         {Name: 'Zero Hour - Identity Crisis', _type: 'Folder', Children: [
 
-        this.ExpandedNodes = [
-            this.TreeModel[0]
-        ]
+        //         ]}
+        //     ]}
+        // ];
+
+        // this.ExpandedNodes = [
+        //     this.TreeModel[0]
+        // ]
     }
 
     selectFolder(node: any) {
