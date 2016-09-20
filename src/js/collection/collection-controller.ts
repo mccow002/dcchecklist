@@ -3,14 +3,14 @@ import { CollectionService } from './collection-service';
 
 export class CollectionController {
 
-    static $inject = ['$uibModal', 'collectionService'];
+    static $inject = ['$mdDialog', 'collectionService'];
 
-    TreeModel: Array<ITreeNode>;
+    TreeModel: Array<ITreeNode> = new Array<ITreeNode>();
     TreeOptions: any;
     SelectedFolder: ITreeNode;
     ExpandedNodes: Array<ITreeNode>;
 
-    constructor(private $uibModal: ng.ui.bootstrap.IModalService,
+    constructor(private $mdDialog: ng.material.IDialogService,
         private collectionService: CollectionService) {
         this.ExpandedNodes = new Array<any>();
 
@@ -28,7 +28,7 @@ export class CollectionController {
         };
 
         collectionService.GetCollectionTree()
-            .then((result: ITreeNode[]) => this.TreeModel = result);
+            .then((result: ITreeNode) => this.TreeModel.push(result));
 
         // this.TreeModel = [
         //     {Name: "DC", _type: 'Folder', Children: [
@@ -54,37 +54,40 @@ export class CollectionController {
         this.SelectedFolder = node;
     }
 
-    addFolder() {
-        let mi = this.$uibModal.open({
-            controller: 'newFolderCtrl as nf',
-            templateUrl: '/dist/views/new-folder.html',
-            resolve: {
-                Type: () => 'Folder'
-            }
-        });
+    addFolder(ev: any) {
+        var linkPrompt = this.$mdDialog.prompt()
+            .title('Add Folder')
+            .placeholder('Folder Name')
+            .ariaLabel('FolderName')
+            .targetEvent(ev)
+            .ok('Add')
+            .cancel('Cancel')
+            .parent(angular.element(document.body));
 
-        mi.result.then((folderName: string) => {
-            let newNode = new TreeFolder(folderName);
-            this.SelectedFolder.Children.push(newNode);
-            this.ExpandedNodes.push(this.SelectedFolder);
-        });
+        this.$mdDialog.show(linkPrompt)
+            .then((result) => {
+                let newNode = new TreeFolder(result);
+                this.collectionService.SaveNode(this.SelectedFolder.path, newNode);
+                // this.SelectedFolder.Children.push(newNode);
+                // this.ExpandedNodes.push(this.SelectedFolder);
+            });
     }
 
     addList() {
-        let mi = this.$uibModal.open({
-            controller: 'newFolderCtrl as nf',
-            templateUrl: '/dist/views/new-folder.html',
-            resolve: {
-                Type: () => 'List'
-            }
-        });
+        // let mi = this.$mdDialog.open({
+        //     controller: 'newFolderCtrl as nf',
+        //     templateUrl: '/dist/views/new-folder.html',
+        //     resolve: {
+        //         Type: () => 'List'
+        //     }
+        // });
 
-        mi.result.then((listName: string) => {
-            let newNode = new TreeList(listName)
-            this.SelectedFolder.Children.push(newNode);
-            this.ExpandedNodes.push(this.SelectedFolder);
-            console.log(newNode);
-        });
+        // mi.result.then((listName: string) => {
+        //     let newNode = new TreeList(listName)
+        //     this.SelectedFolder.Children.push(newNode);
+        //     this.ExpandedNodes.push(this.SelectedFolder);
+        //     console.log(newNode);
+        // });
     }
 
     nodeToggle(node: any, expanded: boolean) {

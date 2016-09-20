@@ -3,10 +3,10 @@ section(layout='row', flex, remaining-height)
         md-content
             md-toolbar
                 .md-toolbar-tools
-                    md-button.md-mini(ng-if='c.SelectedFolder !== undefined && c.SelectedFolder._type !== "List"')
+                    md-button.md-mini(ng-if='c.SelectedFolder !== undefined && c.SelectedFolder._type !== "List"', ng-click='c.addFolder($event)')
                         i.fa.fa-plus.fa-fw
                         span  Add Folder
-                    md-button(ng-if='c.SelectedFolder !== undefined && c.SelectedFolder._type !== "List"')
+                    md-button(ng-if='c.SelectedFolder !== undefined && c.SelectedFolder._type !== "List"', ng-click='c.addList($event)')
                         i.fa.fa-plus.fa-fw
                         span  Add List
             md-content(layout-padding)

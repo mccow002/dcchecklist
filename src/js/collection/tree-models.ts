@@ -4,7 +4,8 @@ export interface ITreeNode {
     Name: string,
     NodeType: string,
     Children: Array<ITreeNode>,
-    Issues: Array<IIssue>
+    Issues: Array<IIssue>,
+    path: string
 }
 
 export class TreeFolder implements ITreeNode {
@@ -12,6 +13,7 @@ export class TreeFolder implements ITreeNode {
     NodeType: string = 'Folder';
     Children: Array<ITreeNode> = new Array<ITreeNode>();
     Issues: Array<IIssue>;
+    path: string;
 
     constructor(name: string) {
         this.Name = name;
@@ -23,6 +25,7 @@ export class TreeList implements ITreeNode {
     NodeType: string = 'List';
     Children: Array<ITreeNode>;
     Issues: Array<IIssue> = new Array<IIssue>();
+    path: string;
 
     constructor(name: string) {
         this.Name = name;

@@ -8,7 +8,8 @@ export interface ICollectionNode extends mongoose.Document {
     Name: String,
     parent: ICollectionNode,
     Children: Array<ICollectionNode>,
-    Issues: Array<IIssue>
+    Issues: Array<IIssue>,
+    getChildren: Function
 }
 
 export const CollectionNodeSchema = new mongoose.Schema({
