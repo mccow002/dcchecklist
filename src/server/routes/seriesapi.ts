@@ -186,6 +186,27 @@ class SeriesApi {
         })
     }
 
+    public MergeSeries(req: express.Request, res: express.Response) {
+        let mergeReq = <IMergeSeriesReq> req.body;
+        
+        let baseQ = Series.findById(mergeReq.BaseSeriesId);
+        let mergeQ = Series.findById(mergeReq.MergeSeriesId);
+
+        q.allSettled([baseQ, mergeQ])
+            .then((result: q.PromiseState<ISeries>[]) => {
+                let baseSeries = result[0].value;
+                _.forEach(result[1].value.Issues, (i: any) => {
+                    baseSeries.Issues.push(i);
+                });
+
+                return Series.findByIdAndUpdate(baseSeries._id, baseSeries);
+            })
+            .then((result: ISeries) => {
+                res.json(result);
+            })
+            .catch((reason: string) => res.json(500, reason));
+    }
+
 }
 
 interface ILinkToFolderReq {
@@ -199,6 +220,11 @@ interface ICreateSeriesLink {
     SeriesToLink: any
 }
 
+interface IMergeSeriesReq {
+    BaseSeriesId: string,
+    MergeSeriesId: string
+}
+
 let seriesApi = new SeriesApi();
 let router = express.Router();
 router.post('/create', seriesApi.CreateSeries);
@@ -209,5 +235,6 @@ router.post('/linkToFolder', seriesApi.LinkToFolder);
 router.delete('/:id', seriesApi.DeleteSeries);
 router.put('/linkprevious/', seriesApi.LinkPrevious);
 router.put('/linknext/', seriesApi.LinkNext);
+router.put('/mergeseries', seriesApi.MergeSeries);
 
 module.exports = router;

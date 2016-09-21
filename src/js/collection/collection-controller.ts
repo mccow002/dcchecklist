@@ -3,7 +3,7 @@ import { CollectionService, IGetTreeResponse } from './collection-service';
 
 export class CollectionController {
 
-    static $inject = ['$mdDialog', 'collectionService'];
+    static $inject = ['$mdDialog', '$state', 'collectionService'];
 
     TreeModel: ITreeNode;
     TreeOptions: any;
@@ -11,6 +11,7 @@ export class CollectionController {
     ExpandedNodes: Array<ITreeNode>;
 
     constructor(private $mdDialog: ng.material.IDialogService,
+        private $state: ng.ui.IStateService,
         private collectionService: CollectionService) {
         this.ExpandedNodes = new Array<any>();
 
@@ -67,6 +68,25 @@ export class CollectionController {
 
     toggleNode() {
         this.collectionService.SaveState(this.ExpandedNodes);
+    }
+
+    deleteNode(ev: any) {
+        var confirm = this.$mdDialog.confirm()
+          .title('Delete ' + this.SelectedFolder.NodeType)
+          .textContent('Are you sure you wish to delete this ' + this.SelectedFolder.NodeType + '? This cannot be undone.')
+          .targetEvent(ev)
+          .ok('Delete!')
+          .cancel('Cancel');
+
+        var self = this;
+        this.$mdDialog.show(confirm).then(function() {
+            console.log('DELETING!');
+            self.collectionService.DeleteNode(self.SelectedFolder._id)
+                .then(() => self.$state.reload());
+        });
+
+        this.collectionService.DeleteNode(this.SelectedFolder._id)
+            .then(() => this.$state.reload());
     }
 
     addFolder(ev: any) {

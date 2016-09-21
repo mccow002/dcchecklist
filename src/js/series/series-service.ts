@@ -140,4 +140,22 @@ export class SeriesService {
         return q.promise;
     }
 
+    public MergeSeries(baseSeriesId: string, mergeSeriesId: string) {
+        let q = this.$q.defer();
+        let req = this.$http.put('/seriesapi/mergeseries', {
+            BaseSeriesId: baseSeriesId,
+            MergeSeriesId: mergeSeriesId
+        });
+
+        req.success((series: ISeries) => {
+            q.resolve(series);
+        });
+
+        req.error(() => {
+            q.reject();
+        });
+
+        return q.promise;
+    }
+
 }

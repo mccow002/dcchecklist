@@ -26,7 +26,7 @@
                         md-button.md-fab.md-mini
                             i.fa.fa-bars
                     md-fab-actions(style='width: 0px')
-                        md-button.md-fab.md-raised.md-mini.md-accent
+                        md-button.md-fab.md-raised.md-mini.md-accent(ng-click='sr.mergeSeries($event)')
                             md-tooltip(md-direction='top') Merge With Series
                             i.fa.fa-compress
                         md-button.md-fab.md-raised.md-mini.md-primary(ng-click='sr.linkSeries($event)')

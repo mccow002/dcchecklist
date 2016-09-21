@@ -55,6 +55,21 @@ export class CollectionService {
 
         return q.promise;
     }
+
+    public DeleteNode(nodeId: string) {
+        let q = this.$q.defer();
+        let req = this.$http.delete('/collectionapi/' + nodeId);
+
+        req.success(() => {
+            q.resolve();
+        });
+
+        req.error(() => {
+            q.reject();
+        });
+
+        return q.promise;
+    }
 }
 
 export interface IGetTreeResponse {

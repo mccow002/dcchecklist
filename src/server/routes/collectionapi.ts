@@ -32,7 +32,7 @@ export class CollectionApi {
             CollectionState.findOne({_type: 'collectionstate'}, (err: mongoose.Error, state: ICollectionState) => {
                 res.json({
                     tree: nodes,
-                    expanded: state.State   
+                    expanded: state == null ? [] : state.State 
                 });
             })
         });
@@ -53,6 +53,11 @@ export class CollectionApi {
             })
     }
 
+    public DeleteNode(req: express.Request, res: express.Response) {
+        CollectionNode.findByIdAndRemove(req.params.id)
+            .then(() => res.json(200));
+    }
+
 }
 
 interface ICreateNodeRequest {
@@ -65,5 +70,6 @@ let router = express.Router();
 router.get('/', collectionApi.GetCollectionTree);
 router.post('/', collectionApi.CreateNode);
 router.put('/savestate', collectionApi.SaveState);
+router.delete('/:id', collectionApi.DeleteNode);
 
 module.exports = router;

@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import { SeriesService } from './series-service';
 import { ISeries } from './series-model';
 
@@ -103,7 +104,7 @@ export class SeriesDetailsController {
             return;
         }
 
-        this.linkToSeries(ev)
+        this.selectSeries(ev)
             .then((result: ISeries) => {
                 this.seriesService.LinkPrevious(this.Series._id, result._id)
                     .then(() => this.$state.go('seriesDetails', { seriesId: result._id }));
@@ -116,14 +117,14 @@ export class SeriesDetailsController {
             return;
         }
 
-        this.linkToSeries(ev)
+        this.selectSeries(ev)
             .then((result: ISeries) => {
                 this.seriesService.LinkNext(this.Series._id, result._id)
                     .then(() => this.$state.go('seriesDetails', { seriesId: result._id }));
             });
     }
 
-    linkToSeries(ev: any) {
+    selectSeries(ev: any) {
         return this.$mdDialog.show({
             controller: PickSeriesController,
             controllerAs: 'ps',
@@ -135,6 +136,15 @@ export class SeriesDetailsController {
                 series: this.Series
             }
         });
+    }
+
+    mergeSeries(ev: any) {
+        this.selectSeries(ev)
+            .then((result: ISeries) => {
+                console.log(result);
+                return this.seriesService.MergeSeries(result._id, this.Series._id);
+            })
+            .then((result: ISeries) => this.$state.go('seriesDetails', { seriesId: result._id }));
     }
 }
 
@@ -209,6 +219,11 @@ class PickSeriesController {
     }
 
     link() {
+        var match = _(this.Series).filter((s: ISeries) => s.Name == this.SearchTerm).first();
+        if(match === undefined) {
+            return;
+        }
+
         this.$mdDialog.hide(this.SelectedSeries);
     }
 
