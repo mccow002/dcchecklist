@@ -1,19 +1,21 @@
 import { IIssue } from '../issues/issue-model';
 
 export interface ITreeNode {
+    _id: string,
     Name: string,
     NodeType: string,
-    Children: Array<ITreeNode>,
+    children: Array<ITreeNode>,
     Issues: Array<IIssue>,
-    path: string
+    parent: string
 }
 
 export class TreeFolder implements ITreeNode {
+    _id: string;
     Name: string;
     NodeType: string = 'Folder';
-    Children: Array<ITreeNode> = new Array<ITreeNode>();
+    children: Array<ITreeNode> = new Array<ITreeNode>();
     Issues: Array<IIssue>;
-    path: string;
+    parent: string;
 
     constructor(name: string) {
         this.Name = name;
@@ -21,11 +23,12 @@ export class TreeFolder implements ITreeNode {
 }
 
 export class TreeList implements ITreeNode {
+    _id: string;
     Name: string;
     NodeType: string = 'List';
-    Children: Array<ITreeNode>;
+    children: Array<ITreeNode>;
     Issues: Array<IIssue> = new Array<IIssue>();
-    path: string;
+    parent: string;
 
     constructor(name: string) {
         this.Name = name;

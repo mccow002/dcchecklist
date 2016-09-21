@@ -1,7 +1,7 @@
 export module Directives {
     export function RemainingHeight($window: ng.IWindowService, $mdMedia: ng.material.IMedia) {
         var calcHeight = (e: ng.IRootElementService) => {
-            if(!$mdMedia('gt-lg')) {
+            if(!$mdMedia('gt-md')) {
                 $(e[0]).css('height', '');
                 return;
             }

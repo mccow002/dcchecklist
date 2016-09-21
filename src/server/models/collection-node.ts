@@ -1,15 +1,13 @@
 import * as mongoose from 'mongoose';
 import { IIssue } from './issue';
-var tree = require('mongoose-tree2');
+var tree = require('mongoose-path-tree');
 
 export interface ICollectionNode extends mongoose.Document {
     _type: String,
     NodeType: String,
     Name: String,
-    parent: ICollectionNode,
     Children: Array<ICollectionNode>,
-    Issues: Array<IIssue>,
-    getChildren: Function
+    Issues: Array<IIssue>
 }
 
 export const CollectionNodeSchema = new mongoose.Schema({
@@ -21,6 +19,10 @@ export const CollectionNodeSchema = new mongoose.Schema({
         ref: 'issue'
     }]
 });
-CollectionNodeSchema.plugin(tree);
+CollectionNodeSchema.plugin(tree, {
+    pathSeparator: '#',
+    onDelete: 'REPARENT',
+    idType: mongoose.Schema.Types.ObjectId
+});
 
 export const CollectionNode = mongoose.model<ICollectionNode>('collectionnode', CollectionNodeSchema, 'dccollection');

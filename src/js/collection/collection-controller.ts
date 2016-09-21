@@ -1,11 +1,11 @@
 import { ITreeNode, TreeFolder, TreeList } from './tree-models';
-import { CollectionService } from './collection-service';
+import { CollectionService, IGetTreeResponse } from './collection-service';
 
 export class CollectionController {
 
     static $inject = ['$mdDialog', 'collectionService'];
 
-    TreeModel: Array<ITreeNode> = new Array<ITreeNode>();
+    TreeModel: ITreeNode;
     TreeOptions: any;
     SelectedFolder: ITreeNode;
     ExpandedNodes: Array<ITreeNode>;
@@ -15,12 +15,14 @@ export class CollectionController {
         this.ExpandedNodes = new Array<any>();
 
         this.TreeOptions = {
-            nodeChildren: "Children",
+            nodeChildren: "children",
             dirSelectable: true,
             injectClasses: {
                 iCollapsed: 'fa fa-folder tree-node-override',
                 iExpanded: 'fa fa-folder-open tree-node-override',
-                iLeaf: 'fa fa-book tree-node-override'
+                iLeaf: 'fa fa-book tree-node-override',
+                li: 'tree-node',
+                label: 'tree-node-selected'
             },
             isLeaf: (node: any) => {
                 return node.NodeType === 'List';
@@ -28,7 +30,10 @@ export class CollectionController {
         };
 
         collectionService.GetCollectionTree()
-            .then((result: ITreeNode) => this.TreeModel.push(result));
+            .then((result: IGetTreeResponse) => {
+                this.TreeModel = result.tree;
+                this.ExpandedNodes = result.expanded;
+            });
 
         // this.TreeModel = [
         //     {Name: "DC", _type: 'Folder', Children: [
@@ -50,44 +55,51 @@ export class CollectionController {
         // ]
     }
 
+    showTreeMenu() {
+        console.log(this.SelectedFolder);
+        return this.SelectedFolder === undefined ||
+            (this.SelectedFolder !== undefined && this.SelectedFolder.NodeType !== "List")
+    }
+
     selectFolder(node: any) {
         this.SelectedFolder = node;
     }
 
+    toggleNode() {
+        this.collectionService.SaveState(this.ExpandedNodes);
+    }
+
     addFolder(ev: any) {
-        var linkPrompt = this.$mdDialog.prompt()
-            .title('Add Folder')
-            .placeholder('Folder Name')
-            .ariaLabel('FolderName')
+        this.addNode('Folder', ev)
+            .then((result) => {
+                let newNode = new TreeFolder(result);
+                this.collectionService.SaveNode(this.SelectedFolder._id, newNode);
+                this.SelectedFolder.children.push(newNode);
+                this.ExpandedNodes.push(this.SelectedFolder);
+            });
+    }
+
+    addList(ev: any) {
+        this.addNode('List', ev)
+            .then((result) => {
+                let newNode = new TreeList(result);
+                this.collectionService.SaveNode(this.SelectedFolder._id, newNode);
+                this.SelectedFolder.children.push(newNode);
+                this.ExpandedNodes.push(this.SelectedFolder);
+            })
+    }
+
+    addNode(type: string, ev: any) {
+        var prompt = this.$mdDialog.prompt()
+            .title('Add ' + type)
+            .placeholder(type + ' Name')
+            .ariaLabel(type + ' Name')
             .targetEvent(ev)
             .ok('Add')
             .cancel('Cancel')
             .parent(angular.element(document.body));
 
-        this.$mdDialog.show(linkPrompt)
-            .then((result) => {
-                let newNode = new TreeFolder(result);
-                this.collectionService.SaveNode(this.SelectedFolder.path, newNode);
-                // this.SelectedFolder.Children.push(newNode);
-                // this.ExpandedNodes.push(this.SelectedFolder);
-            });
-    }
-
-    addList() {
-        // let mi = this.$mdDialog.open({
-        //     controller: 'newFolderCtrl as nf',
-        //     templateUrl: '/dist/views/new-folder.html',
-        //     resolve: {
-        //         Type: () => 'List'
-        //     }
-        // });
-
-        // mi.result.then((listName: string) => {
-        //     let newNode = new TreeList(listName)
-        //     this.SelectedFolder.Children.push(newNode);
-        //     this.ExpandedNodes.push(this.SelectedFolder);
-        //     console.log(newNode);
-        // });
+        return this.$mdDialog.show(prompt);
     }
 
     nodeToggle(node: any, expanded: boolean) {

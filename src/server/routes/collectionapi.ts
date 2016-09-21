@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 import { ICollectionNode, CollectionNode } from '../models/collection-node';
+import { ICollectionState, CollectionState } from '../models/collection-state';
 
 export class CollectionApi {
 
@@ -10,12 +11,14 @@ export class CollectionApi {
         CollectionNode.findById(request.parentNodeId, (err: mongoose.Error, result: ICollectionNode) => {
             console.log(result);
             let newNode = new CollectionNode();
-            newNode.parent = result;
+            console.log(newNode);
+            (<any>newNode).parent = result;
             newNode.Name = request.node.Name;
             newNode.NodeType = request.node.NodeType;
+            newNode._type = 'collectionnode';
             console.log(newNode);
 
-            newNode.save((err: mongoose.Error, savedNode: ICollectionNode) => {
+            newNode.save().then((savedNode: ICollectionNode) => {
                 if(err) throw err;
                 console.log(savedNode);
                 res.json(savedNode);
@@ -24,29 +27,30 @@ export class CollectionApi {
     }
 
     public GetCollectionTree(req: express.Request, res: express.Response) {
-        CollectionNode.findOne({
-            _type: 'collectionnode',
-            Name: 'Library'
-        })
-        .then((root: ICollectionNode) => {
+        (<any>CollectionNode).getChildrenTree((err: any, nodes: any) => {
             
-            if(!root){
-                var newRoot = new CollectionNode();
-                newRoot._type = 'collectionnode';
-                newRoot.Name = 'Library';
-                newRoot.NodeType = 'Folder';
-                CollectionNode.create(newRoot).then((savedRoot: ICollectionNode) => {
-                    console.log(savedRoot)
-                    res.json([savedRoot]);
+            CollectionState.findOne({_type: 'collectionstate'}, (err: mongoose.Error, state: ICollectionState) => {
+                res.json({
+                    tree: nodes,
+                    expanded: state.State   
                 });
-                return;
-            }
-            
-            root.getChildren(true, (err: any, nodes: any) => {
-                console.log(nodes);
-                res.json(nodes.length === 0 ? root : nodes);
-            });
-        })
+            })
+        });
+    }
+
+    public SaveState(req: express.Request, res: express.Response) {
+        CollectionState.findOne({_type: 'collectionstate'})
+            .then((state: ICollectionState) => {
+                if(!state){
+                    state = new CollectionState();
+                    state._type = 'collectionstate';
+                    state.State = req.body;
+                } else {
+                    state.State = req.body;
+                }
+
+                state.save().then(() => res.json(200));
+            })
     }
 
 }
@@ -60,5 +64,6 @@ let collectionApi = new CollectionApi();
 let router = express.Router();
 router.get('/', collectionApi.GetCollectionTree);
 router.post('/', collectionApi.CreateNode);
+router.put('/savestate', collectionApi.SaveState);
 
 module.exports = router;

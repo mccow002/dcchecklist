@@ -94,6 +94,13 @@ h2 {
   background: none !important;
 }
 
+.tree-node {
+}
+
+.tree-node-selected {
+  font-weight: normal !important;
+}
+
 md-list-item.active {
   background-color: rgba(158,158,158,0.2);
 }

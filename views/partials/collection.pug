@@ -3,17 +3,21 @@ section(layout='row', flex, remaining-height)
         md-content
             md-toolbar
                 .md-toolbar-tools
-                    md-button.md-mini(ng-if='c.SelectedFolder !== undefined && c.SelectedFolder._type !== "List"', ng-click='c.addFolder($event)')
-                        i.fa.fa-plus.fa-fw
-                        span  Add Folder
-                    md-button(ng-if='c.SelectedFolder !== undefined && c.SelectedFolder._type !== "List"', ng-click='c.addList($event)')
-                        i.fa.fa-plus.fa-fw
-                        span  Add List
+                    md-button.md-fab.md-raised.md-mini.md-hue-1(ng-if='c.showTreeMenu()', ng-click='c.addFolder($event)')
+                        md-tooltip(md-direction='top') Add Folder
+                        i.fa.fa-folder.fa-fw
+                    md-button.md-fab.md-raised.md-mini.md-hue-1(ng-if='c.showTreeMenu()', ng-click='c.addList($event)')
+                        md-tooltip(md-direction='top') Add List
+                        i.fa.fa-book.fa-fw
+                    span(flex)
+                    md-button.md-fab.md-raised.md-mini.md-warn.md-hue-2(ng-if='c.SelectedFolder !== undefined', ng-click='c.deleteNode($event)')
+                        md-tooltip(md-direction='top') Delete
+                        i.fa.fa-ban.fa-fw
             md-content(layout-padding)
                 treecontrol.tree-classic(tree-model='c.TreeModel', 
                     options='c.TreeOptions', 
                     selected-node='c.SelectedFolder', 
                     on-selection="c.selectFolder(node)",
                     expanded-nodes='c.ExpandedNodes',
-                    on-node-toggle='c.nodeToggle(node)') {{node.Name}}
-    md-content(flex, layout-padding) {{c.ExpandedNodes}}
+                    on-node-toggle='c.toggleNode()') {{node.Name}}
+    md-content(flex, layout-padding) {{c.SelectedFolder}}

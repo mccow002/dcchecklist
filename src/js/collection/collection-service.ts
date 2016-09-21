@@ -40,4 +40,24 @@ export class CollectionService {
 
         return q.promise;
     }
+
+    public SaveState(expandedNodes: any) {
+        let q = this.$q.defer();
+        let req = this.$http.put('/collectionapi/savestate', expandedNodes);
+
+        req.success(() => {
+            q.resolve();
+        });
+
+        req.error(() => {
+            q.reject();
+        });
+
+        return q.promise;
+    }
+}
+
+export interface IGetTreeResponse {
+    tree: any,
+    expanded: any
 }
