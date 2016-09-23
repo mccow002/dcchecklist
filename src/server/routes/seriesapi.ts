@@ -7,65 +7,33 @@ import * as path from 'path';
 import { Series, ISeries } from '../models/series';
 import { Issue, IIssue } from '../models/issue';
 import { Config } from '../config';
+import { SeriesService, ISeriesService } from '../services/SeriesService';
 
 class SeriesApi {
 
-    constructor() {
-        //mongoose.connect(Config.DbConnection);
-    }
-
     public GetAll(req: express.Request, res: express.Response){
-        Series.find({ _type: 'series' }, (err: mongoose.Error, results: ISeries[]) => {
-            if(err) throw err;
-            res.json(results);
-        })
+        let _seriesService = new SeriesService();
+        _seriesService.GetAll()
+            .then((series: ISeries[]) => res.json(series))
+            .catch((reason: string) => res.json(500, reason));
     }
 
     public GetOne(req: express.Request, res: express.Response) {
+        let _seriesService = new SeriesService();
+
         var seriesId = req.params.id;
-        Series.findOne({ _id: seriesId })
-            .populate('Issues')
-            .exec((err: mongoose.Error, result: ISeries) => {
-                if(err) throw err;
-                res.json(result);
-            });
+        _seriesService.GetOne(seriesId)
+            .then((result: ISeries) => res.json(result))
+            .catch((reason: string) => res.json(500, reason));
     }
 
     public CreateSeries(req: express.Request, res: express.Response) {
-        var series = req.body;
+        let _seriesService = new SeriesService();
 
-        let issues = new Array<IIssue>()
-        for(let i = 0; i < series.Issues.length; i++) {
-            let issue = new Issue();
-            issue._type = "issue";
-            issue.Number = series.Issues[i].Number
-            issues.push(issue);
-        }
-
-        Issue.insertMany(issues, (err: mongoose.Error, results: IIssue[]) => {
-            if(err) throw err;
-
-            let seriesObj = new Series();
-            seriesObj._type = "series";
-            seriesObj.Name = series.Name
-            seriesObj.Volume = series.Volume;
-            seriesObj.StartDate = series.StartDate;
-            seriesObj.EndDate = series.EndDate;
-
-            if(series.SeriesType !== ''){
-                seriesObj.SeriesType = series.SeriesType;
-            }
-
-            seriesObj.Issues = new Array<IIssue>();
-            for(let i = 0; i < results.length; i++) {
-                seriesObj.Issues.push(results[i]._id);
-            }
-
-            Series.create(seriesObj, (err: mongoose.Error, result: ISeries) => {
-                if(err) throw err;
-                res.json(result);
-            });
-        })
+        var series = <ISeries>req.body;
+        _seriesService.CreateSeries(series)
+            .then((result: ISeries) => res.json(result))
+            .catch((reason: string) => res.json(500, reason));   
     }
 
     LinkPrevious(req: express.Request, res: express.Response) {
@@ -169,24 +137,17 @@ class SeriesApi {
     }
 
     public DeleteSeries(req: express.Request, res: express.Response) {
+        let _seriesService = new SeriesService();
+
         var id = req.params.id;
-
-        Series.findById(id, (err: mongoose.Error, result: ISeries) => {
-            var promises = new Array<q.IPromise<IIssue>>();
-            result.Issues.forEach(i => {
-                var d = q.defer();
-                Issue.findByIdAndRemove(i, () => d.resolve());
-                promises.push(d.promise);
-            });
-
-            q.allSettled(promises)
-                .then(() => {
-                    Series.findByIdAndRemove(id, () => res.json(200));
-                });
-        })
+        _seriesService.DeleteSeries(id)
+            .then(() => res.json(200))
+            .catch((reason: string) => res.json(500, reason));
     }
 
     public MergeSeries(req: express.Request, res: express.Response) {
+        let _seriesService = new SeriesService();
+
         let mergeReq = <IMergeSeriesReq> req.body;
         
         let baseQ = Series.findById(mergeReq.BaseSeriesId);
@@ -200,6 +161,12 @@ class SeriesApi {
                 });
 
                 return Series.findByIdAndUpdate(baseSeries._id, baseSeries);
+            })
+            .then((result: ISeries) => {
+                let d = q.defer();
+                Series.findByIdAndRemove(mergeReq.MergeSeriesId)
+                    .then(() => d.resolve(result));
+                return d.promise;
             })
             .then((result: ISeries) => {
                 res.json(result);

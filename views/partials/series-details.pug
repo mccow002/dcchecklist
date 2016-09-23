@@ -40,27 +40,15 @@
     section(layout='row', ng-if='!sr.LoadingSeries')
         md-sidenav.md-sidenav-left(md-component-id="left", md-is-locked-open="$mdMedia('gt-md')", md-whiteframe="4", style='overflow: auto', remaining-height)
            md-content
-                //- ul.nav.nav-pills.nav-stacked
-                //-     li(ng-repeat='issue in sr.Series.Issues', ui-sref-active='active', md-ink-ripple)
-                //-         a(ui-sref='.Issue({issueId: issue._id})') 
-                //-             span {{sr.Series.Name}} - {{issue.Number}}
-                //-             i.fa.fa-link.fa-fw.pull-right(ng-if='issue.FilePath !== undefined')
-                md-list
-                    md-list-item(ng-class='sr.getActive(issue._id)', ng-click='sr.goToIssue(issue._id)', ng-repeat='issue in sr.Series.Issues')
-                        p {{sr.Series.Name}} - {{issue.Number}}
+                md-toolbar.md-accent.md-hue-3(style="position: fixed;")
+                    .md-toolbar-tools
+                        md-button(ng-click='sr.toggleEditMode()') {{sr.getEditBtnText()}}
+                md-list(style="margin-top: 64px")
+                    md-list-item(ng-class='sr.getActive(issue._id)', ng-click='sr.goToIssue(issue)', ng-repeat='issue in sr.Series.Issues')
+                        p
+                            md-checkbox.md-primary(ng-if='sr.EditMode', ng-checked="sr.SelectedIssues.indexOf(issue) > -1", ng-click='sr.goToIssue(issue)')
+                            span {{sr.Series.Name}} - {{issue.Number}}
                         i.fa.fa-link.fa-fw.pull-right(ng-if='issue.FilePath !== undefined')
 
         md-content(flex)
             ui-view
-
-    //- .row
-    //-     .col-sm-2
-    //-         md-list
-    //-             md-list-item(ng-repeat='issue in sr.Series.Issues')
-    //-         //- ul.nav.nav-pills.nav-stacked
-    //-         //-     li(ng-repeat='issue in sr.Series.Issues', ui-sref-active='active')
-    //-         //-         a(ui-sref='.Issue({issueId: issue._id})') 
-    //-         //-             span {{sr.Series.Name}} - {{issue.Number}}
-    //-         //-             i.fa.fa-link.fa-fw.pull-right(ng-if='issue.FilePath !== undefined')
-    //-     .col-sm-10
-    //-         ui-view

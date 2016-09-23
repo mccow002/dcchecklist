@@ -3,6 +3,7 @@ import * as mongoose from 'mongoose';
 export interface IIssue extends mongoose.Document {
     _type: String,
     Number: Number,
+    Type: String,
     Title: String,
     FilePath: String,
     Month: String,
@@ -22,6 +23,7 @@ export interface IIssue extends mongoose.Document {
 export const IssueSchema = new mongoose.Schema({
     _type: String,
     Number: Number,
+    Type: String,
     Title: String,
     FilePath: String,
     Month: String,

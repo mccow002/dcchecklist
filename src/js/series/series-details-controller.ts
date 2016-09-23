@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import { SeriesService } from './series-service';
 import { ISeries } from './series-model';
+import { IIssue } from '../issues/issue-model';
 
 interface ISeriesDetailsRouteParams extends ng.ui.IStateParamsService {
     seriesId: string
@@ -13,6 +14,9 @@ export class SeriesDetailsController {
     Series: ISeries;
     route: string;
     LoadingSeries: boolean = true;
+    
+    EditMode: boolean = false;
+    SelectedIssues: Array<IIssue>;
 
     constructor(
         private $stateParams: ISeriesDetailsRouteParams,
@@ -23,29 +27,48 @@ export class SeriesDetailsController {
         private $window: ng.IWindowService,
         private toastr: ng.toastr.IToastrService,
         private seriesService: SeriesService) {
-        seriesService.GetOne($stateParams.seriesId)
-            .then((series: ISeries) => {
-                this.Series = series;
-                this.LoadingSeries = false;
-                if($state.current.name !== 'seriesDetails.Issue') {
-                    this.$state.go('seriesDetails.Issue', {
-                        seriesId: $stateParams.seriesId,
-                        issueId: series.Issues[0]._id
-                    });
-                }
-            });
+            this.SelectedIssues = new Array<IIssue>();
 
-        this.route = JSON.stringify($window.location.hash);
+            seriesService.GetOne($stateParams.seriesId)
+                .then((series: ISeries) => {
+                    this.Series = series;
+                    this.LoadingSeries = false;
+                    if($state.current.name !== 'seriesDetails.Issue') {
+                        this.$state.go('seriesDetails.Issue', {
+                            seriesId: $stateParams.seriesId,
+                            issueId: series.Issues[0]._id
+                        });
+                    }
+                });
+
+            this.route = JSON.stringify($window.location.hash);
     }
 
-    goToIssue(issueId: string) {
-        this.$state.go('seriesDetails.Issue', {issueId: issueId})
-            .then(() => {
-                let sideNav = this.$mdSidenav('left');
-                if(sideNav.isOpen() && !sideNav.isLockedOpen()) {
-                    sideNav.close();
-                }
-            })
+    toggleEditMode() {
+        this.EditMode = !this.EditMode;
+    }
+
+    getEditBtnText() {
+        return this.EditMode ? 'Done' : 'Edit';
+    }
+
+    goToIssue(issue: IIssue) {
+        if(this.EditMode){
+            let i = this.SelectedIssues.indexOf(issue);
+            if(i > -1) {
+                this.SelectedIssues.splice(i, 1)
+            } else {
+                this.SelectedIssues.push(issue);
+            }
+        } else {
+            this.$state.go('seriesDetails.Issue', {issueId: issue._id})
+                .then(() => {
+                    let sideNav = this.$mdSidenav('left');
+                    if(sideNav.isOpen() && !sideNav.isLockedOpen()) {
+                        sideNav.close();
+                    }
+                });
+        }
     }
 
     getActive(issueId: string) {

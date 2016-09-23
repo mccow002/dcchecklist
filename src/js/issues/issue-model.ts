@@ -2,6 +2,7 @@ export interface IIssue {
     _id: string,
     _type: string,
     Number: Number,
+    Type: string,
     Title: string,
     FilePath: string,
     Month: string,
@@ -22,6 +23,7 @@ export class Issue implements IIssue {
     _id: string;
     _type: string;
     Number: Number;
+    Type: string;
     Title: string;
     FilePath: string;
     Month: string;
