@@ -10,11 +10,6 @@
                         span.xs-small(ng-if='sr.Series.Volume') Vol. {{sr.Series.Volume}}
                     .md-subhead(flex) Dates: {{sr.Series.StartDate | date: 'MM/yyyy'}} - {{sr.Series.EndDate | date: 'MM/yyyy'}}
                 span(flex)
-                //- .btn-group
-                //-     a.btn.btn-primary(ng-click='sr.linkSeries()', md-ink-ripple)
-                //-         i.fa.fa-link.fa-fw
-                //-     a.btn.btn-danger(ng-click='sr.deleteSeries($event)', md-ink-ripple)
-                //-         i.fa.fa-trash-o.fa-fw
                 md-button.md-icon-button(ng-click='sr.previousSeries($event)')
                     md-tooltip(md-direction='top') Previous Volume
                     i.fa.fa-arrow-left
@@ -25,7 +20,7 @@
                     md-fab-trigger
                         md-button.md-fab.md-mini
                             i.fa.fa-bars
-                    md-fab-actions(style='width: 0px')
+                    md-fab-actions(style='width: auto')
                         md-button.md-fab.md-raised.md-mini.md-accent(ng-click='sr.mergeSeries($event)')
                             md-tooltip(md-direction='top') Merge With Series
                             i.fa.fa-compress
@@ -43,11 +38,14 @@
                 md-toolbar.md-accent.md-hue-3(style="position: fixed;")
                     .md-toolbar-tools
                         md-button(ng-click='sr.toggleEditMode()') {{sr.getEditBtnText()}}
+                        span(flex)
+                        md-button.md-fab.md-mini.md-raised.md-primary(ng-click='sr.applyFilter($event)')
+                            i.fa.fa-filter
                 md-list(style="margin-top: 64px")
-                    md-list-item(ng-class='sr.getActive(issue._id)', ng-click='sr.goToIssue(issue)', ng-repeat='issue in sr.Series.Issues')
+                    md-list-item(ng-class='sr.getActive(issue._id)', ng-click='sr.goToIssue(issue)', ng-repeat='issue in sr.filterIssue()')
                         p
                             md-checkbox.md-primary(ng-if='sr.EditMode', ng-checked="sr.SelectedIssues.indexOf(issue) > -1", ng-click='sr.goToIssue(issue)')
-                            span {{sr.Series.Name}} - {{issue.Number}}
+                            span {{sr.getIssueName(issue)}}
                         i.fa.fa-link.fa-fw.pull-right(ng-if='issue.FilePath !== undefined')
 
         md-content(flex)

@@ -15,13 +15,13 @@ div
             nav
                 ul.pagination.pull-left
                     li.xs-small(ng-repeat='i in ck.Indexes track by $index', ng-class="{active: ck.Index == $index}")
-                        a(ui-sref='publications({sort:i})') {{i}}
+                        a(ng-click='ck.goToSlice(i)') {{i}}
             span(flex)
             form
                 md-input-container.md-no-float(md-theme='input')
                     label &nbsp;
                     input(ng-model='ck.SearchParams.SearchText' placeholder='Search', input-clear, on-clear='ck.clearSearch()')
-                md-button.md-fab.md-raised.md-primary.md-mini.md-hue-3(ng-click='ck.search()', type='submit')
+                md-button.md-fab.md-raised.md-primary.md-mini.md-hue-3(ng-click='ck.goToSearch()', type='submit')
                     i.fa.fa-search
 
     md-progress-linear(ng-if='ck.Loading', md-mode='query')

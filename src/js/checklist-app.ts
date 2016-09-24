@@ -33,6 +33,7 @@ require('angular-touch');
 require('angular-tree-control');
 require('angular-material');
 require('angular-messages');
+require('angular-local-storage');
 
 export let app = module('checklist', [
     'ui.bootstrap',
@@ -42,7 +43,8 @@ export let app = module('checklist', [
     'ngTouch',
     'treeControl',
     'ngMaterial',
-    'ngMessages'
+    'ngMessages',
+    'LocalStorageModule'
 ]);
 
 app.service('pubService', PubService);

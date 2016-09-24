@@ -1,0 +1,11 @@
+md-dialog(flex='30')
+    md-toolbar
+        .md-toolbar-tools
+            h2 Link Series to Folder
+    md-dialog-content
+        .md-dialog-content(layout='column', flex)
+            div(ng-repeat='type in fi.Types')
+                md-checkbox(ng-click='fi.toggle(type)', ng-checked='fi.Selected.indexOf(type) > -1') {{type}}
+
+    md-dialog-actions(layout='row')
+        md-button.md-raised.md-primary(ng-click="fi.applyFilter()") Filter

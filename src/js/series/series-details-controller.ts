@@ -17,6 +17,7 @@ export class SeriesDetailsController {
     
     EditMode: boolean = false;
     SelectedIssues: Array<IIssue>;
+    IssueTypeFilter: Array<string> = new Array<string>();
 
     constructor(
         private $stateParams: ISeriesDetailsRouteParams,
@@ -50,6 +51,29 @@ export class SeriesDetailsController {
 
     getEditBtnText() {
         return this.EditMode ? 'Done' : 'Edit';
+    }
+
+    getIssueName(issue: IIssue) {
+        var issueLabel = this.Series.Name;
+        if(issue.Type){
+            issueLabel += ' ' + issue.Type;
+        }
+
+        return issueLabel + ' - ' + issue.Number;
+    }
+
+    filterIssue() {
+        if(this.IssueTypeFilter.length === 0){
+            return this.Series.Issues;
+        }
+
+        return _(this.Series.Issues).filter((i: IIssue) => {
+            if(i.Type === undefined) {
+                return this.IssueTypeFilter.indexOf("Issue") > -1;
+            }
+
+            return this.IssueTypeFilter.indexOf(i.Type) > -1;
+        }).value();
     }
 
     goToIssue(issue: IIssue) {
@@ -169,6 +193,22 @@ export class SeriesDetailsController {
             })
             .then((result: ISeries) => this.$state.go('seriesDetails', { seriesId: result._id }));
     }
+
+    applyFilter(ev: any) {
+        this.$mdDialog.show({
+            controller: FilterIssuesController,
+            controllerAs: 'fi',
+            templateUrl: '/dist/views/filter-issues.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose: true,
+            locals: {
+                series: this.Series,
+                filter: this.IssueTypeFilter
+            }
+        })
+        .then((result: Array<string>) => this.IssueTypeFilter = result); 
+    }
 }
 
 class LinkSeriesController {
@@ -251,3 +291,41 @@ class PickSeriesController {
     }
 
 } 
+
+class FilterIssuesController {
+
+    static $inject = ['$mdDialog', 'series', 'filter'];
+
+    Types: Array<string>;
+    Selected: Array<string> = new Array<string>();
+
+    constructor(private $mdDialog: ng.material.IDialogService,
+        private series: ISeries,
+        private filter: Array<string>) {
+            this.Selected = filter;
+            this.Types = _(series.Issues)
+                .map(i => {
+                    if(i.Type === undefined){
+                        return 'Issue';
+                    } else {
+                        return i.Type;
+                    }
+                })
+                .uniq()
+                .value();
+        }
+
+    toggle(type: string) {
+        let i = this.Selected.indexOf(type);
+        if(i > -1) {
+            this.Selected.splice(i, 1)
+        } else {
+            this.Selected.push(type);
+        }
+    }
+
+    applyFilter() {
+        this.$mdDialog.hide(this.Selected);
+    }
+
+}

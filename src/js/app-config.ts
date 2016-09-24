@@ -3,17 +3,25 @@ import * as http from './http-interceptor-factory';
 
 export class AppConfig {
 
-    static $inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider', '$mdThemingProvider'];
+    static $inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider', '$mdThemingProvider', 'localStorageServiceProvider'];
 
     constructor($stateProvider: ng.ui.IStateProvider,
         $urlRouteProvider: ng.ui.IUrlRouterProvider,
         $httpProvider: ng.IHttpProvider,
-        $mdThemingProvider: ng.material.IThemingProvider){
+        $mdThemingProvider: ng.material.IThemingProvider,
+        localStorageServiceProvider: ng.local.storage.ILocalStorageServiceProvider){
             $httpProvider.interceptors.push('httpInterceptor');
+
+            localStorageServiceProvider.setPrefix('comics-app');
 
             $stateProvider
                 .state('publications', {
                     url: '/publications/:sort?',
+                    templateUrl: '/dist/views/publications.html',
+                    controller: 'publicationsCtrl as ck'
+                })
+                .state('publicationsSearch', {
+                    url: '/publications/search/:searchTerm',
                     templateUrl: '/dist/views/publications.html',
                     controller: 'publicationsCtrl as ck'
                 })

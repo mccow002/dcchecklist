@@ -4,7 +4,7 @@ export module Http {
 
         return {
             request: (config: any) => {
-                if(config.url.endsWith('.html')){
+                if(/.html$/.test(config.url)){
                     return config || $q.when(config);
                 }                
 
@@ -14,7 +14,7 @@ export module Http {
                 return config || $q.when(config);
             },
             response: (response: any) => {
-                if(response.config.url.endsWith('.html')){
+                if(/.html$/.test(response.config.url)){
                     return response || $q.when(response);
                 }
 

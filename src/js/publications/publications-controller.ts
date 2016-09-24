@@ -9,12 +9,20 @@ class Search {
 }
 
 interface IPublisherParams extends ng.ui.IStateParamsService {
-    sort: string
+    sort: string,
+    searchTerm: string
+}
+
+interface ILocationCache {
+    Type: string,
+    Value: string
 }
 
 export class PublicationsController {
 
-    static $inject = ['$rootScope', 'pubService', '$uibModal', '$stateParams', '$state', 'toastr', 'parseSeriesPresenter'];
+    static $inject = ['$rootScope', 'pubService', '$stateParams', '$state', 'toastr', 'localStorageService', 'parseSeriesPresenter'];
+
+    LocationKey: string = 'lastPubUrl';
 
     Publications: Array<IPublication>;
     Indexes: Array<string>;
@@ -24,11 +32,11 @@ export class PublicationsController {
 
     constructor(
         private $rootScope: ng.IRootScopeService,
-        private pubService: PubService, 
-        private modal: ng.ui.bootstrap.IModalService,
+        private pubService: PubService,
         private $stateParams: IPublisherParams,
         private $state: ng.ui.IStateService,
         private toastr: ng.toastr.IToastrService,
+        private localStorageService: ng.local.storage.ILocalStorageService,
         private parseSeriesPresenter: ParseSeriesPresenter) {
         
         this.Indexes = new Array<string>();
@@ -43,11 +51,39 @@ export class PublicationsController {
             this.Indexes.push(String.fromCharCode(i));
         }
 
+        var locCache = <ILocationCache>localStorageService.get(this.LocationKey);
+        if(locCache){
+            if(locCache.Type === 'sort') {
+                this.Index = this.Indexes.indexOf(locCache.Value);
+                this.load();
+            } else if(locCache.Type === 'search') {
+                this.SearchParams.SearchText = locCache.Value;
+                this.search();
+            }
+
+            return;
+        }
+
+        if($stateParams.searchTerm){
+            this.setLocationCache('search', $stateParams.searchTerm);
+            this.SearchParams.SearchText = $stateParams.searchTerm;
+            this.search();
+            return;
+        }
+
         if($stateParams.sort){
+            this.setLocationCache('sort', this.$stateParams.sort);
             this.Index = this.Indexes.indexOf($stateParams.sort);
         }
 
         this.load();
+    }
+
+    private setLocationCache(type: string, value: string) {
+        this.localStorageService.set(this.LocationKey, {
+                Type: type,
+                Value: value
+            });
     }
 
     load() {
@@ -58,13 +94,18 @@ export class PublicationsController {
             });
     }
 
-    loadSlice(index: number) {
-        // this.Index = index;
-        // this.load();
-        return '#/publications/' + this.Indexes[index];
+    goToSlice(sort: string) {
+        this.localStorageService.remove(this.LocationKey);
+        this.$state.go('publications', {sort: sort});
+    }
+
+    goToSearch() {
+        this.localStorageService.remove(this.LocationKey);
+        this.$state.go('publicationsSearch', { searchTerm: this.SearchParams.SearchText }, {location: 'replace'});
     }
 
     search() {
+
         this.Publications = new Array<IPublication>();
 
         if(this.SearchParams.SearchText === ''){

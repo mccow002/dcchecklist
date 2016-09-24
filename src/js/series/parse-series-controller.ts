@@ -108,8 +108,9 @@ export class ParseSeriesController {
         }
 
         let series = new Series(this.issues.Title, this.issues.Volume);
-        series.StartDate = new Date(this.StartYear, this.Months.indexOf(this.StartMonth));
-        series.EndDate = new Date(this.EndYear, this.Months.indexOf(this.EndMonth));
+
+        series.StartDate = this.getDate(this.StartYear, this.StartMonth);
+        series.EndDate = this.getDate(this.EndYear, this.EndMonth);
 
         if(this.issues.VolumeType !== ''){
             series.SeriesType = this.issues.VolumeType;
@@ -124,4 +125,13 @@ export class ParseSeriesController {
             .then((result) => this.$mdDialog.hide(result));
     }
 
+    getDate(year: number, month: string): Date {
+        if(month && year) {
+            return new Date(year, this.Months.indexOf(month));
+        } else if(year) {
+            return new Date(year, 1);
+        } else{
+            return null;
+        }
+    }
 }
