@@ -43,9 +43,6 @@ export class PublicationsController {
         this.Index = 0;
         this.SearchParams = new Search();
 
-        this.$rootScope.$on('loading:progress', () => this.Loading = true);
-        this.$rootScope.$on('loading:finish', () => this.Loading = false);
-
         this.Indexes.push("0-9");
         for(let i = 65;i<91;++i) {
             this.Indexes.push(String.fromCharCode(i));

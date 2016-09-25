@@ -17,7 +17,7 @@ export class SeriesDetailsController {
     
     EditMode: boolean = false;
     SelectedIssues: Array<IIssue>;
-    IssueTypeFilter: Array<string> = new Array<string>();
+    Filters: Filters = new Filters();;
 
     constructor(
         private $stateParams: ISeriesDetailsRouteParams,
@@ -63,16 +63,27 @@ export class SeriesDetailsController {
     }
 
     filterIssue() {
-        if(this.IssueTypeFilter.length === 0){
+        if(this.Filters.NoFilters()){
             return this.Series.Issues;
+        }
+
+        let linkFilter = (i: IIssue): boolean => {
+            if(this.Filters.LinkFilter === 'Linked'){
+                return i.FilePath !== undefined || i.FilePath !== '';
+            } else if(this.Filters.LinkFilter === 'Not Linked'){
+                return i.FilePath === undefined || i.FilePath === '';
+            } else {
+                return true;
+            }
+
         }
 
         return _(this.Series.Issues).filter((i: IIssue) => {
             if(i.Type === undefined) {
-                return this.IssueTypeFilter.indexOf("Issue") > -1;
+                return this.Filters.Filters.indexOf("Issue") > -1 && linkFilter(i);
             }
 
-            return this.IssueTypeFilter.indexOf(i.Type) > -1;
+            return this.Filters.Filters.indexOf(i.Type) > -1 && linkFilter(i);
         }).value();
     }
 
@@ -204,10 +215,10 @@ export class SeriesDetailsController {
             clickOutsideToClose: true,
             locals: {
                 series: this.Series,
-                filter: this.IssueTypeFilter
+                filters: this.Filters
             }
         })
-        .then((result: Array<string>) => this.IssueTypeFilter = result); 
+        .then((result: Filters) => this.Filters = result); 
     }
 }
 
@@ -294,15 +305,21 @@ class PickSeriesController {
 
 class FilterIssuesController {
 
-    static $inject = ['$mdDialog', 'series', 'filter'];
+    static $inject = ['$mdDialog', 'series', 'filters'];
 
     Types: Array<string>;
     Selected: Array<string> = new Array<string>();
+    LinkFilterData: Array<string>;
+    LinkFilter: string;
 
     constructor(private $mdDialog: ng.material.IDialogService,
         private series: ISeries,
-        private filter: Array<string>) {
-            this.Selected = filter;
+        private filters: Filters) {
+            this.LinkFilterData = ['All', 'Linked', 'Not Linked'];
+            
+            this.Selected = filters.Filters;
+            this.LinkFilter = filters.LinkFilter;
+
             this.Types = _(series.Issues)
                 .map(i => {
                     if(i.Type === undefined){
@@ -325,7 +342,20 @@ class FilterIssuesController {
     }
 
     applyFilter() {
-        this.$mdDialog.hide(this.Selected);
+        let filters = new Filters();
+        filters.Filters = this.Selected;
+        filters.LinkFilter = this.LinkFilter;
+
+        this.$mdDialog.hide(filters);
     }
 
+}
+
+class Filters {
+    Filters: Array<string> = new Array<string>();
+    LinkFilter: string = 'All';
+
+    NoFilters(): boolean {
+        return this.Filters.length === 0 && this.LinkFilter === 'All';
+    }
 }

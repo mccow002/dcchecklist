@@ -3,9 +3,16 @@ md-dialog(flex='30')
         .md-toolbar-tools
             h2 Link Series to Folder
     md-dialog-content
-        .md-dialog-content(layout='column', flex)
-            div(ng-repeat='type in fi.Types')
-                md-checkbox(ng-click='fi.toggle(type)', ng-checked='fi.Selected.indexOf(type) > -1') {{type}}
+        .md-dialog-content
+            .container-fluid
+                .row
+                    .col-md-6
+                        div(ng-repeat='type in fi.Types')
+                            md-checkbox(ng-click='fi.toggle(type)', ng-checked='fi.Selected.indexOf(type) > -1') {{type}}
+                    .col-md-6
+                        md-radio-group(ng-model='fi.LinkFilter')
+                            div(ng-repeat='linkFilter in fi.LinkFilterData')
+                                md-radio-button(value='{{linkFilter}}') {{linkFilter}}
 
     md-dialog-actions(layout='row')
         md-button.md-raised.md-primary(ng-click="fi.applyFilter()") Filter
