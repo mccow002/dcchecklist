@@ -7,11 +7,11 @@ export class PubService {
 
     constructor(private $q: ng.IQService, private $http: ng.IHttpService) {}
 
-    public load(index: String): ng.IPromise<IPublication[]>{
+    public load(index: String): ng.IPromise<IPubResult>{
         let q = this.$q.defer();
         let req = this.$http.get('/pubapi/getall/' + index);
 
-        req.success((data: ng.IHttpPromiseCallback<IPublication[]>) => {
+        req.success((data: ng.IHttpPromiseCallback<IPubResult>) => {
             q.resolve(data);
         });
 
@@ -22,11 +22,11 @@ export class PubService {
         return q.promise;
     } 
 
-    public Search(search: string): ng.IPromise<IPublication[]>{
+    public Search(search: string): ng.IPromise<IPubResult>{
         var q = this.$q.defer();
         var req = this.$http.get('/pubapi/search/' + search);
 
-        req.success(function(data: ng.IHttpPromiseCallback<IPublication[]>){
+        req.success(function(data: ng.IHttpPromiseCallback<IPubResult>){
             q.resolve(data);
         });
 
@@ -37,7 +37,7 @@ export class PubService {
         return q.promise;
     }
 
-    public Put(pub: any): ng.IPromise<IPublication> {
+    public Put(pub: any): ng.IPromise<number> {
         var q = this.$q.defer();
         var req = this.$http.put('/pubapi/', pub);
 
@@ -52,7 +52,7 @@ export class PubService {
         return q.promise;
     }
 
-    public Delete(pub: any): ng.IPromise<IPublication> {
+    public Delete(pub: any): ng.IPromise<number> {
         var q = this.$q.defer();
         let req = this.$http.delete('/pubapi/' + pub._id);
 
@@ -66,4 +66,9 @@ export class PubService {
 
         return q.promise;
     }
+}
+
+export interface IPubResult {
+    publications: IPublication[],
+    owned: number
 }

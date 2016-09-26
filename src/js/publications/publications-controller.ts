@@ -1,5 +1,5 @@
 import { app } from '../checklist-app';
-import { PubService } from './publications-service';
+import { PubService, IPubResult } from './publications-service';
 import { IPublication } from './publication-model';
 import { ISeries } from '../series/series-model';
 import { ParseSeriesPresenter } from '../series/parse-series-controller';
@@ -29,6 +29,7 @@ export class PublicationsController {
     Index: number;
     SearchParams: Search;
     Loading: boolean;
+    Owned: number;
 
     constructor(
         private $rootScope: ng.IRootScopeService,
@@ -86,8 +87,9 @@ export class PublicationsController {
     load() {
         this.Publications = [];
         this.pubService.load(this.Indexes[this.Index])
-            .then((data: IPublication[]) => {
-                this.Publications = data;
+            .then((data: IPubResult) => {
+                this.Publications = data.publications;
+                this.Owned = data.owned;
             });
     }
 
@@ -111,8 +113,9 @@ export class PublicationsController {
         }
 
         this.pubService.Search(this.SearchParams.SearchText)
-            .then((data: IPublication[]) => {
-                this.Publications = data;
+            .then((data: IPubResult) => {
+                this.Publications = data.publications;
+                this.Owned = data.owned;
             });
     }
 
@@ -137,11 +140,14 @@ export class PublicationsController {
 
     MarkAsOwned(pub: IPublication) {
         pub.Owned = !pub.Owned;
-        this.pubService.Put(pub);
+        this.pubService.Put(pub)
+            .then((owned: number) => this.Owned = owned);
     }
     
     Remove(pub: IPublication) {
-        this.pubService.Delete(pub);
+        this.pubService.Delete(pub)
+            .then((owned: number) => this.Owned = owned);
+
         var index = this.Publications.indexOf(pub);
         this.Publications.splice(index, 1);
     }

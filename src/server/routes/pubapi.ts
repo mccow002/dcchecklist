@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
+import * as q from 'q';
 import { Publication, IPublication } from '../models/publication';
 import { PublicationService } from '../services/PublicationService';
 import { Config } from '../config'
@@ -13,9 +14,15 @@ class PublicationsApi {
     public GetAll(req: express.Request, res: express.Response) {
         let pubService = new PublicationService();
 
-        pubService.GetByFirstChar(req.params.index)
-            .then((pubs: Array<IPublication>) => {
-                res.json(pubs);
+        let getQ = pubService.GetByFirstChar(req.params.index);
+        let countQ = pubService.GetOwnedPercentage();
+
+        q.all([getQ, countQ])
+            .then((results: [IPublication[], number]) => {
+                res.json({
+                    publications: results[0],
+                    owned: results[1]    
+                });
             })
             .catch((reason: string) => res.json(500, reason));
     }
@@ -23,9 +30,15 @@ class PublicationsApi {
     public Search(req: express.Request, res: express.Response) {
         let pubService = new PublicationService();
 
-        pubService.GetBySearch(req.params.search)
-            .then((pubs: Array<IPublication>) => {
-                res.json(pubs); 
+        let searchQ = pubService.GetBySearch(req.params.search)
+        let countQ = pubService.GetOwnedPercentage();
+
+        q.all([searchQ, countQ])
+            .then((results: [IPublication[], number]) => {
+                res.json({
+                    publications: results[0],
+                    owned: results[1] 
+                }); 
             })
             .catch((reason: string) => res.json(500, reason));
     }
@@ -36,8 +49,9 @@ class PublicationsApi {
 
         pubService.Update(pub)
             .then((update: IPublication) => {
-                res.json(update);
+                return pubService.GetOwnedPercentage();
             })
+            .then((result: number) => res.json(result))
             .catch((reason: string) => res.json(500, reason));
     }
 
@@ -46,8 +60,9 @@ class PublicationsApi {
 
         pubService.Delete(req.params.id)
             .then(() => {
-                res.json(200);
+                return pubService.GetOwnedPercentage();
             })
+            .then((result: number) => res.json(result))
             .catch((reason: string) => res.json(500, reason));
     }
 }

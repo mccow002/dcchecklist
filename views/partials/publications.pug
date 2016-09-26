@@ -31,6 +31,10 @@ div
         .col-md-12.text-center
             div No Search Results Found!
 
+    .well
+        label Owned: 
+        span {{ck.Owned}}%
+
     table.table(ng-if='!ck.Loading && ck.Publications.length > 0')
         thead
             tr
