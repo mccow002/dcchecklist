@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 import { Publication, IPublication } from '../models/publication';
+import { PublicationService } from '../services/PublicationService';
 import { Config } from '../config'
 
 class PublicationsApi {
@@ -10,34 +11,44 @@ class PublicationsApi {
     }
 
     public GetAll(req: express.Request, res: express.Response) {
-        Publication.find({_type: 'publication', FirstChar: req.params.index}, 
-            (err: mongoose.Error, pubs: Array<IPublication>) => {
+        let pubService = new PublicationService();
+
+        pubService.GetByFirstChar(req.params.index)
+            .then((pubs: Array<IPublication>) => {
                 res.json(pubs);
-        });
+            })
+            .catch((reason: string) => res.json(500, reason));
     }
 
     public Search(req: express.Request, res: express.Response) {
-        Publication.find({_type: 'publication', $text: {$search: req.params.search}})
-         .exec((err: mongoose.Error, pubs: Array<IPublication>) => {
-             res.json(pubs); 
-         });
+        let pubService = new PublicationService();
+
+        pubService.GetBySearch(req.params.search)
+            .then((pubs: Array<IPublication>) => {
+                res.json(pubs); 
+            })
+            .catch((reason: string) => res.json(500, reason));
     }
 
     public Update(req: express.Request, res: express.Response) {
-        let pub = req.body;
-        Publication.findByIdAndUpdate(pub._id, pub, 
-            (err: mongoose.Error, update: IPublication) => {
-                if(err) throw err;
+        let pub = <IPublication>req.body;
+        let pubService = new PublicationService();
+
+        pubService.Update(pub)
+            .then((update: IPublication) => {
                 res.json(update);
-        });
+            })
+            .catch((reason: string) => res.json(500, reason));
     }
 
     public Delete(req: express.Request, res: express.Response) {
-        Publication.findByIdAndRemove(req.params.id, 
-            (err: mongoose.Error) => {
-                if(err) throw err;
+        let pubService = new PublicationService();
+
+        pubService.Delete(req.params.id)
+            .then(() => {
                 res.json(200);
-        });
+            })
+            .catch((reason: string) => res.json(500, reason));
     }
 }
 
