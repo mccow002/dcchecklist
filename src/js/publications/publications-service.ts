@@ -41,8 +41,8 @@ export class PubService {
         var q = this.$q.defer();
         var req = this.$http.put('/pubapi/', pub);
 
-        req.success(() => {
-            q.resolve();
+        req.success((result: number) => {
+            q.resolve(result);
         });
 
         req.error(() => {
@@ -56,8 +56,8 @@ export class PubService {
         var q = this.$q.defer();
         let req = this.$http.delete('/pubapi/' + pub._id);
 
-        req.success(() => {
-            q.resolve();
+        req.success((result: number) => {
+            q.resolve(result);
         });
 
         req.error(() => {
