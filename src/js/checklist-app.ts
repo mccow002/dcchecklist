@@ -7,6 +7,7 @@ import { SeriesDetailsController } from './series/series-details-controller';
 import { IssueDetailsController } from './issues/issue-details-controller';
 import { CollectionController, NewFolderController } from './collection/collection-controller';
 import { RootController } from './root-controller';
+import { SettingsController } from './settings-controller';
 
 import { SeriesService } from './series/series-service';
 import { PubService } from './publications/publications-service';
@@ -72,6 +73,7 @@ app.controller('seriesCtrl', SeriesController);
 app.controller('issueDetailsCtrl', IssueDetailsController);
 app.controller('collectionCtrl', CollectionController);
 app.controller('newFolderCtrl', NewFolderController);
+app.controller('settingsCtrl', SettingsController);
 
 app.constant('Months', ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']);
 

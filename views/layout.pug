@@ -29,6 +29,9 @@ html(ng-app='checklist')
               a(ui-sref='series') Series
             li(ui-sref-active='active')
               a(ui-sref='collection') Collection
+            li(ng-controller='settingsCtrl as s')
+              a(ng-click='s.openSettings()')
+                i.fa.fa-gear
 
         h3(class='text-muted') DC Checklist
 
