@@ -1,4 +1,7 @@
-
+interface IRootScope extends ng.IRootScopeService
+{
+    openSettings: () => void;
+}
 
 export class RootController {
 
@@ -7,7 +10,7 @@ export class RootController {
     CurrentRoute: string;
 
     constructor(
-        $rootScope: ng.IRootScopeService, 
+        $rootScope:IRootScope, 
         $location: ng.ILocationService, 
         $state: ng.ui.IState,
         pubsub: any){
@@ -16,6 +19,10 @@ export class RootController {
             console.log('State Changed!');
             pubsub.unsubAll();
         })
+
+        $rootScope.openSettings = function(){
+            alert('WHOO!');
+        }
     }
 
 }
