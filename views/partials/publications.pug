@@ -50,7 +50,7 @@ div
                     td(width='100')
                         .btn-toolbar
                             .btn-group
-                                button.btn.btn-danger.btn-xs(ng-click='ck.Remove(r)')
+                                button.btn.btn-danger.btn-xs(ng-click='ck.Remove(r, $event)')
                                     i.fa.fa-trash-o
                                 button.btn.btn-success.btn-xs(ng-click='ck.MarkAsOwned(r)', ng-if='!r.Owned')
                                     i.fa.fa-check

@@ -20,7 +20,7 @@ interface ILocationCache {
 
 export class PublicationsController {
 
-    static $inject = ['$rootScope', 'pubService', '$stateParams', '$state', 'toastr', 'localStorageService', 'parseSeriesPresenter'];
+    static $inject = ['$rootScope', 'pubService', '$stateParams', '$state', 'toastr', '$mdDialog', 'localStorageService', 'parseSeriesPresenter'];
 
     LocationKey: string = 'lastPubUrl';
 
@@ -37,6 +37,7 @@ export class PublicationsController {
         private $stateParams: IPublisherParams,
         private $state: ng.ui.IStateService,
         private toastr: ng.toastr.IToastrService,
+        private $mdDialog: ng.material.IDialogService,
         private localStorageService: ng.local.storage.ILocalStorageService,
         private parseSeriesPresenter: ParseSeriesPresenter) {
         
@@ -144,12 +145,22 @@ export class PublicationsController {
             .then((owned: number) => this.Owned = owned);
     }
     
-    Remove(pub: IPublication) {
-        this.pubService.Delete(pub)
-            .then((owned: number) => this.Owned = owned);
+    Remove(pub: IPublication, ev: any) {
+        var confirm = this.$mdDialog.confirm()
+          .title('Delete Publication')
+          .textContent('Are you sure you wish to delete this publication? This cannot be undone.')
+          .targetEvent(ev)
+          .ok('Delete!')
+          .cancel('Cancel');
 
-        var index = this.Publications.indexOf(pub);
-        this.Publications.splice(index, 1);
+        var self = this;
+        this.$mdDialog.show(confirm).then(() => {
+            self.pubService.Delete(pub)
+                .then((owned: number) => self.Owned = owned);
+
+            var index = self.Publications.indexOf(pub);
+            self.Publications.splice(index, 1);
+        });
     }
 
     ParseSeries(pub: IPublication, ev: any) {

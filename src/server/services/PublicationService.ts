@@ -14,7 +14,7 @@ export class PublicationService {
     }
 
     GetBySearch(searchTerm: string): Promise<IPublication[]> {
-        return Publication.find({_type: 'publication', $text: {$search: '"' + searchTerm + '"'}});
+        return Publication.find({_type: 'publication', $text: {$search: searchTerm}}).sort([['Title', 'ascending'], ['Series', 'ascending']]);
     }
 
     GetOwnedPercentage(): Promise<number> {

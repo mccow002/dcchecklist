@@ -35,6 +35,7 @@ class PublicationsApi {
 
         q.all([searchQ, countQ])
             .then((results: [IPublication[], number]) => {
+                console.log(results[0]);
                 res.json({
                     publications: results[0],
                     owned: results[1] 
