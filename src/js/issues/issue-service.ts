@@ -68,15 +68,16 @@ export class IssueService {
 
     public GetMetadata(issue: IIssue): ng.IPromise<IIssue> {
         let q = this.$q.defer();
-        let req = this.$http.post('/issuesapi/metadata', issue);
+        setTimeout(() => q.resolve(), 1000);
+        // let req = this.$http.post('/issuesapi/metadata', issue);
 
-        req.success((result: IIssue) => {
-            q.resolve(result);
-        });
+        // req.success((result: IIssue) => {
+        //     q.resolve(result);
+        // });
 
-        req.error(() => {
-            q.reject();
-        });
+        // req.error(() => {
+        //     q.reject();
+        // });
 
         return q.promise;
     }

@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import { SeriesService } from './series-service';
 import { ISeries } from './series-model';
 import { IIssue } from '../issues/issue-model';
+import { IssueService } from '../issues/issue-service';
 
 interface ISeriesDetailsRouteParams extends ng.ui.IStateParamsService {
     seriesId: string
@@ -131,6 +132,24 @@ export class SeriesDetailsController {
         })
         .then((result: ISeries) => {
             this.toastr.success('Series Linked!');
+            this.$state.reload();
+        });
+    }
+
+    loadSeriesMetadata(ev: any) {
+        this.$mdDialog.show({
+            controller: LoadMetadataController,
+            controllerAs: 'md',
+            templateUrl: '/dist/views/series-load-metadata.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose: true,
+            locals: {
+                series: this.Series
+            }
+        })
+        .then((result: ISeries) => {
+            this.toastr.success('Metadata Loaded!!');
             this.$state.reload();
         });
     }
@@ -358,4 +377,38 @@ class Filters {
     NoFilters(): boolean {
         return this.Filters.length === 0 && this.LinkFilter === 'All';
     }
+}
+
+class LoadMetadataController {
+
+    static $inject = ['$mdDialog', 'series', 'issueService'];
+
+    Progress: number;
+    UpdateText: string;
+
+    constructor(private $mdDialog: ng.material.IDialogService,
+        private series: ISeries,
+        private issueService: IssueService)
+        {
+            this.Progress = 0;
+            this.send(0);
+        }
+
+        send(i: number){
+            let issue = this.series.Issues[i];
+            this.UpdateText = this.series.Name + ' - ' + issue.Number
+            this.issueService.GetMetadata(issue)
+                .then(() => {
+                    this.process(i);
+                });
+        }
+
+        process(i: number) {
+            this.Progress = Math.ceil((i / this.series.Issues.length) * 100);
+            if(i + 1 < this.series.Issues.length) {
+                this.send(i + 1);
+            } else {
+                this.$mdDialog.hide();
+            }
+        }
 }

@@ -28,13 +28,27 @@ export class CollectionApi {
 
     public GetCollectionTree(req: express.Request, res: express.Response) {
         (<any>CollectionNode).getChildrenTree((err: any, nodes: any) => {
-            
-            CollectionState.findOne({_type: 'collectionstate'}, (err: mongoose.Error, state: ICollectionState) => {
-                res.json({
-                    tree: nodes,
-                    expanded: state == null ? [] : state.State 
+            if(nodes.length == 0){
+                let rootNode = new CollectionNode();
+                rootNode.Name = "Library";
+                rootNode.NodeType = "Folder";
+                rootNode._type = "collectionnode";
+
+                rootNode.save().then((savedNode: ICollectionNode) => {
+                    res.json({
+                        tree: [rootNode],
+                        expanded: []
+                    });
                 });
-            })
+            }
+            else {
+                CollectionState.findOne({_type: 'collectionstate'}, (err: mongoose.Error, state: ICollectionState) => {
+                    res.json({
+                        tree: nodes,
+                        expanded: state == null ? [] : state.State 
+                    });
+                });
+            }
         });
     }
 

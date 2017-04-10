@@ -1,0 +1,8 @@
+md-dialog(flex="40%")
+    md-toolbar
+        .md-toolbar-tools
+            h2 Loading Series Metadata
+    md-dialog-content
+        .md-dialog-content
+            md-progress-linear(md-mode="determinate", value="{{md.Progress}}")
+            div {{md.UpdateText}}
